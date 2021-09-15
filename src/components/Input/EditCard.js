@@ -29,7 +29,7 @@ const useStyle = makeStyles((theme) =>({
 
 //Paper prvi na koji se naidje je ustvari forma za unos teksta nove kartice
 //Prima se {setOpen} iz InputContainera i pomocu njega se zatvara forma za unos nove kartice nakon pritiska ADD dugmeta
-export default function InputCard(props){
+export default function EditCard({setOpen,listId}){
     
     const classes=useStyle();
     const [cardDescription,setCardDescription]=useState('');
@@ -45,13 +45,12 @@ export default function InputCard(props){
 
     const handleBtnConfirm=() =>
     {
-    const karta={description: cardDescription,idList:props.listId};
-     axios.post(link,karta)
+    const karta={description: cardDescription,idList:listId};
+     axios.put(link,karta)
         .then(response => console.log(response));
        // alert(listId);
-        setCardDescription(""); 
-        props.addCard(karta);
-        props.setOpen(false);
+        setCardDescription("");
+       setOpen(true);
     };
 
 
@@ -62,7 +61,7 @@ export default function InputCard(props){
             <Paper className={classes.card}> 
             <InputBase
             onChange={handleOnChange}
-            multiline onBlur={ () => props.setOpen(false)}
+            multiline onBlur={ () => setOpen(false)}
             fullWidth
             value={cardDescription}
             inputProps={{
@@ -75,8 +74,8 @@ export default function InputCard(props){
             </Paper>
             </div>
             <div className={classes.confirm}>
-                <Button className={classes.btnConfirm} onMouseDown={handleBtnConfirm}>Add Card</Button>
-                <IconButton onClick={()=>props.setOpen(false)}>
+                <Button className={classes.btnConfirm} onMouseDown={handleBtnConfirm}>Confirm</Button>
+                <IconButton onClick={()=>setOpen(false)}>
                     <ClearIcon/>
                 </IconButton>
             </div>

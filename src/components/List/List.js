@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {Paper,Typography,CssBaseline} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import Title from "./Title";
@@ -14,20 +14,24 @@ const useStyle = makeStyles((theme) =>({
         marginTop:theme.spacing(1),
     },
 }))
-export default function List({list})
+export default function List(props)
 {
     
     const classes=useStyle();
+    const [cards, setCards] = useState(props.list.cards);
+    function addCard(card) {
+        let newCards = [...cards, card];
+        setCards(newCards);
+    }
     return(
     <div>
         <Paper className={classes.root}>
             <CssBaseline/>
-             <Title title={list.title}/>
-             {list.cards.map((card)=>(
-                 <Card key={card.id} card={card} list={list}/>
+             <Title title={props.list.name}/>
+             {cards.map((card)=>(
+                 <Card key={card.id} card={card}/>
              ))}
-             <InputContainer/>
-              
+             <InputContainer listId={props.list.id} addCard={addCard}/>
         </Paper>
     </div>
     );
