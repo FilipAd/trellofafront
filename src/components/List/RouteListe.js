@@ -12,25 +12,26 @@ display:flex;
 flex-direction:row;
 `;
 
-export default class RouteListe extends Component
-{
-  state={
-  lists:[]
-  }
 
-  constructor()
+// setList(res.data)});
+
+export default function RouteListe()
+{
+  const [lists,setList]=useState([]);
+  React.useEffect(()=>{axios.get(listsUrl).then(res=>{setList(res.data);console.log(res.data)});},[]);
+  if(!lists) return null;
+ 
+  
+  
+  return (
+  <ListContainer>
   {
-    super();
-    axios.get(listsUrl).then(res=>{console.log(res.data); this.setState({lists:res.data})});
+  lists.map((list) => {
+  return(<List list={list} key={list.id} />);
   }
+  )
+  }
+  </ListContainer>   
+  )
 
-render()
-{
-  return (   
-  this.state.lists.map((list) => {
-  return(<List list={list} key={list.id} />)
-  }
-  )
-  )
-}
 }

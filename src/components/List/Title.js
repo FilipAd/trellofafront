@@ -45,7 +45,6 @@ export default function Title(props)
 
     function handleEdit()
     {
-    console.log("EVO GAAAAAAAA U TITLU "+props.listId);
     const updatedList={idList:props.listId,idBoard:props.idBoard,name:pomTitle};
     axios.put(listsUrl+props.listId,updatedList)
        .then(response => console.log(response));

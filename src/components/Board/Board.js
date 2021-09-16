@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {Paper,Typography,CssBaseline} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import { withTheme } from "styled-components";
+import { findAllInRenderedTree } from "react-dom/test-utils";
 
 
 const useStyle = makeStyles((theme) =>({
@@ -15,7 +16,7 @@ const useStyle = makeStyles((theme) =>({
         display:"flex",
         fontSize:"20px",
         width : '500px',
-        height:'100px',
+        height:'60px',
         background:"#80cbc4",
         marginLeft:theme.spacing(1),
         marginTop:theme.spacing(1),
@@ -32,7 +33,7 @@ export default function Board(props)
     const classes=useStyle();
     return(
         
-                <Paper className={classes.board}>
+                <Paper className={classes.board} onClick={()=>alert(props.idBoard)}>
                {props.title}
                </Paper>
                

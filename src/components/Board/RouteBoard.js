@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState,useEffect} from "react";
 import {Paper,Typography,CssBaseline,InputBase} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import { withTheme } from "styled-components";
@@ -7,27 +7,9 @@ import axios from "axios";
 import {boardsUrl} from "../../URLs";
 
 
+const useStyle = makeStyles((theme) =>({
 
-
-export default class RouteBoard extends Component
-{
- 
-    
-  state=
-  {
-  boards:[]
-  }
-    
-    
-    constructor()
-    {
-        super();
-        axios.get(boardsUrl).then(res=>{console.log("evooooo ga"+res.data); this.setState({boards:res.data})});
-    }
-    
-  render()
-  {
-    const CreateInput = {
+ createInput : {
     width: "400px",
     height: "40px",
     fontSize: "22px",
@@ -38,49 +20,69 @@ export default class RouteBoard extends Component
     outlineColor: "blue",
     boxShadow: "0 2px 4px grey",
     alignSelf: "center",
-    }
+    },
 
-    const CreateTitle = {
+    createTitle :{
         fontSize: "20px",
         color: "black",
         fontWeight: "bold",
         fontFamily: "Lucida Handwriting",
         align:"center",
-    }
-
-
-    const root={
+    },
+    root:{
         align:"center",
-    }
-   const title=
-    {
-        fontSize:"70px",
+        padding:"30px",
+    },
+   title:{
+        fontSize:"50px",
         fontFamily:"Lucida Handwriting",
-    }
+        padding:"30px",
+    },
+}))
+
+
+
+export default function RouteBoard()
+{
+ 
+  const classes=useStyle();
+  const [boards,setBoard]=useState(null);
+    
+    
+    React.useEffect(()=>{axios.get(boardsUrl).then(res=>{setBoard(res.data);console.log(res.data)});},[]);
+
+    if(!boards) return null;
+
+  
+    
+
+  
 
     return(
-      
-        <div style={root}>
-            
-        <div style={CreateTitle}>
+        <div className={classes.root}>
+        <div align="center">
+         <div className={classes.createTitle}>
             CREATE NEW BOARD:
         </div>
-        <div style={CreateInput}>
+        <div className={classes.createInput}>
+
+
         <form >
         <InputBase
-          onChange=""
           placeholder="Your boards title..."
           type="text"
         />
-      </form>
-        </div>
+        </form>
 
-        <div align="center">
-            <div style={title}>
+
+        </div>
+        </div>
+        <div className={classes.title} align="center">
             <h>BOARDS</h>
-            </div>
+            </div> 
+        <div align="center">
             {
-            this.state.boards.map(board=>{ return <Board title={board.name}></Board>})
+           boards.map(board=>{return <Board title={board.name} idBoard={board.id}/>})
             }
         </div>
 
@@ -90,4 +92,3 @@ export default class RouteBoard extends Component
         );
     }
 
-}
