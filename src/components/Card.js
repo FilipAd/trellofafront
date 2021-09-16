@@ -1,13 +1,12 @@
 import React,{useState} from "react";
 import {Paper,IconButton,Collapse} from "@material-ui/core"
 import {makeStyles} from "@material-ui/core/styles";
-import ClearIcon from "@material-ui/icons/Clear";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import axios from "axios";
 import EditCard from "./Input/EditCard";
+import {cardsUrl} from "../URLs";
 
-export const link='http://localhost:9090/cards/';
 
 
 
@@ -18,24 +17,25 @@ const useStyle = makeStyles((theme) =>({
     } 
 }))
 
-function handleDelete(id)
-{
-    alert("ovo se brise"+id);
-    axios.delete(link+id);
-}
 
-function handleEdit(id)
-{
-    alert("ovo se edituje"+id);
-    axios.put(link+id);
-}
+
+
 
 
 
 export default function Card(props)
 {
+
     const classes=useStyle();
     const [open,setOpen]=useState(false);
+
+    function handleDelete(id)
+    {
+    axios.delete(cardsUrl+id)
+       .then(response => console.log(response));
+       props.deleteCard(id);
+    }
+
 
     return(
         <div>
@@ -43,8 +43,8 @@ export default function Card(props)
             <Paper className={classes.card}>
             {props.card.description}
             <div>
-            <IconButton>
-                <EditIcon onMouseDown={()=>alert(props.card.id)}/>
+            <IconButton  onMouseDown={()=>setOpen(!open)}>
+                <EditIcon/>
             </IconButton>
             <IconButton onMouseDown={()=>handleDelete(props.card.id)}>
                 <DeleteIcon/>
@@ -53,7 +53,7 @@ export default function Card(props)
             </Paper>
             </Collapse>
             <Collapse in={open}>
-            <EditCard/>
+            <EditCard setOpen={setOpen} description={props.card.description} cardId={props.card.id} listId={props.listId} editCard={props.editCard} />
             </Collapse>
         </div>
     );

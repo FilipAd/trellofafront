@@ -1,11 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+
 import List from "./components/List/List";
 import styled from "styled-components";
 import React,{ useState , Component} from "react";
 import axios from 'axios';
+import {Button} from "@material-ui/core"
+import RouteListe from './components/List/RouteListe';
+import InputContainer from "./components/Input/InputContainer";
+import Board from './components/Board/Board';
+import BoardRoute from "./components/Board/RouteBoard";
 
-const api=axios.create({baseURL:`http://localhost:9090/lists`})
+
+
 
 const ListContainer=styled.div
 `
@@ -13,33 +18,23 @@ display:flex;
 flex-direction:row;
 `;
 
-export default function  App ()
+export default function App() 
 {
-  
-let response = [];
-let lists = [];
-// const [lists, setLists]= useState([]);
-// axios.get(`http://localhost:9090/lists`).then(res=>{setLists({lists:res.data})});
-axios.get(`http://localhost:9090/lists`).then(res=>(response.push(res.data)));
- 
- console.log('1111');
- console.log(response);
- console.log('2222');
-    
-
-
-  const listList = lists.map(list => (<List list={list} key={list.id} />));
-  console.log(listList)
-  return {listList};
-  /*
-  return (   
-  this.state.lists.map((list) => {
   return(
-  <List list={list} key={list.id} />
-  )
-  }
-  )); */
+   <div>
+      <BoardRoute/>
+    </div>
+  /*
+  <div>
+  <ListContainer>
+    <RouteListe/>
+    <InputContainer type={"list"} buttonTitle={"ADD LIST"}/>
+  </ListContainer>
+  </div>*/
+  );
+  
 }
+
 
 /* lists=
   [

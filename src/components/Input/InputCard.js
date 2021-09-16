@@ -3,6 +3,7 @@ import {Paper,InputBase,Button,IconButton} from "@material-ui/core"
 import ClearIcon from "@material-ui/icons/Clear";
 import {makeStyles, fade} from "@material-ui/core/styles";
 import axios from 'axios';
+import {cardsUrl} from "../../URLs";
 
 const useStyle = makeStyles((theme) =>({
     card:{  
@@ -36,7 +37,6 @@ export default function InputCard(props){
 
  //   const karta={description: cardDescription,idList:listId};
 
-    const link='http://localhost:9090/cards/';
 
     function handleOnChange(e) {
         setCardDescription(e.target.value);
@@ -46,12 +46,12 @@ export default function InputCard(props){
     const handleBtnConfirm=() =>
     {
     const karta={description: cardDescription,idList:props.listId};
-     axios.post(link,karta)
+     axios.post(cardsUrl,karta)
         .then(response => console.log(response));
-       // alert(listId);
         setCardDescription(""); 
         props.addCard(karta);
         props.setOpen(false);
+   
     };
 
 
@@ -69,14 +69,13 @@ export default function InputCard(props){
             className:classes.input,
             }}
             placeholder={
-                "Enter a title of this card..."
-            }
+                (props.type==="list")?"Enter title of this list":"Enter a description of this card..."}
            />    
             </Paper>
             </div>
             <div className={classes.confirm}>
-                <Button className={classes.btnConfirm} onMouseDown={handleBtnConfirm}>Add Card</Button>
-                <IconButton onClick={()=>props.setOpen(false)}>
+                <Button className={classes.btnConfirm} onMouseDown={handleBtnConfirm}>{(props.type==="list")?"ADD LIST":"ADD CARD"}</Button>
+                <IconButton onMouseDown={()=>props.setOpen(false)}>
                     <ClearIcon/>
                 </IconButton>
             </div>

@@ -4,7 +4,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import Title from "./Title";
 import Card from "../Card";
 import InputContainer from "../Input/InputContainer";
-import { findByLabelText } from "@testing-library/dom";
 
 const useStyle = makeStyles((theme) =>({
     root: {
@@ -19,19 +18,43 @@ export default function List(props)
     
     const classes=useStyle();
     const [cards, setCards] = useState(props.list.cards);
+    const [titles,setTitle]= useState(props.list.name)
+
     function addCard(card) {
         let newCards = [...cards, card];
         setCards(newCards);
     }
+
+    function deleteCard(id)
+    {
+        const remainingCards=cards.filter(card => id !== card.id);
+        setCards(remainingCards);
+    }
+
+    function editCard(card)
+    {
+        const newCards=[];
+        cards.map(el=>{
+            if(el.id===card.id)
+            {
+                el.description=card.description;
+                newCards.push(el);
+            }
+            else
+            newCards.push(el);
+        });
+        setCards(newCards)
+    }
+
     return(
     <div>
         <Paper className={classes.root}>
             <CssBaseline/>
-             <Title title={props.list.name}/>
+             <Title title={titles} setTitle={setTitle} listId={props.list.id} idBoard={props.list.idBoard}/>
              {cards.map((card)=>(
-                 <Card key={card.id} card={card}/>
+                 <Card key={card.id} card={card} deleteCard={deleteCard} editCard={editCard} listId={props.list.id}/>
              ))}
-             <InputContainer listId={props.list.id} addCard={addCard}/>
+             <InputContainer listId={props.list.id} addCard={addCard} type={"card"}/>
         </Paper>
     </div>
     );
