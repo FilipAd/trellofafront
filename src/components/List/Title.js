@@ -49,6 +49,7 @@ export default function Title(props)
     axios.put(listsUrl+props.listId,updatedList)
        .then(response => console.log(response));
        props.setTitle(pomTitle);
+       setPomTitle("");
        setOpen(!open);
     }
 

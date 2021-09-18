@@ -3,7 +3,7 @@ import {Paper,InputBase,Button,IconButton} from "@material-ui/core"
 import ClearIcon from "@material-ui/icons/Clear";
 import {makeStyles, fade} from "@material-ui/core/styles";
 import axios from 'axios';
-import {cardsUrl} from "../../URLs";
+import {cardsUrl,listsUrl} from "../../URLs";
 
 const useStyle = makeStyles((theme) =>({
     card:{  
@@ -34,23 +34,43 @@ export default function InputCard(props){
     
     const classes=useStyle();
     const [cardDescription,setCardDescription]=useState('');
+    const [listTitle,setListTitle]=useState('');
 
  //   const karta={description: cardDescription,idList:listId};
 
 
-    function handleOnChange(e) {
-        setCardDescription(e.target.value);
+    function handleOnChange(e) 
+    {
+        
+        (props.type==="list")?setListTitle(e.target.value):setCardDescription(e.target.value);
     }
 
 
     const handleBtnConfirm=() =>
     {
-    const karta={description: cardDescription,idList:props.listId};
-     axios.post(cardsUrl,karta)
-        .then(response => console.log(response));
+    if(props.type==="list")
+    {
+        
+        var list={id:-1,name:listTitle,idBoard:1,cards:[]}; //OVOOOOOO PREPRAVITI KAD DODJU TABLE
+        var newLists=[];
+        axios.post(listsUrl,list)
+        .then(response => {console.log(response.data.id);props.setList([...props.lists,response.data])});
+   //     newLists=[...props.lists,list];
+//    props.setList(newLists); 
+        setListTitle("");
+        
+    }
+    else if(props.type==="card")
+    {
+    let card={description: cardDescription,idList:props.listId};
+    let cardFinal={id:-1,description: cardDescription,idList:props.listId};
+    console.log(+props.listId);
+    axios.post(cardsUrl,card)
+        .then(response => {console.log(response);cardFinal["id"]=response.data.id});
+        props.addCard(cardFinal);
         setCardDescription(""); 
-        props.addCard(karta);
         props.setOpen(false);
+    }
    
     };
 
@@ -64,7 +84,7 @@ export default function InputCard(props){
             onChange={handleOnChange}
             multiline onBlur={ () => props.setOpen(false)}
             fullWidth
-            value={cardDescription}
+            value={(props.type==="list")?listTitle:cardDescription}
             inputProps={{
             className:classes.input,
             }}

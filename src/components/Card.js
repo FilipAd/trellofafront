@@ -36,6 +36,8 @@ export default function Card(props)
        props.deleteCard(id);
     }
 
+    function handlePom()
+    {}
 
     return(
         <div>

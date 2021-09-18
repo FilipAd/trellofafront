@@ -4,10 +4,13 @@ import styled from "styled-components";
 import React,{ useState , Component} from "react";
 import axios from 'axios';
 import {Button} from "@material-ui/core"
-import RouteListe from './components/List/RouteListe';
+import RouteList from './components/List/RouteList';
 import InputContainer from "./components/Input/InputContainer";
 import Board from './components/Board/Board';
-import BoardRoute from "./components/Board/RouteBoard";
+import RouteBoard from "./components/Board/RouteBoard";
+import Login from "./Login";
+//import { Router } from "react-router";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 
 
@@ -21,16 +24,26 @@ flex-direction:row;
 export default function App() 
 {
   return(
-   <div>
+
+    <Router>
+    <Switch>
+      <Route exact path='/' component={Login} />
+      <Route path="/sign-in" component={Login} />
+      <Route path="/lists" render={(props) => <RouteList test={"test1111111"}/> } />
+      <Route path="/boards" component={RouteBoard} />  
+    </Switch>
+    </Router>
+  
+ /*  <div>
       <BoardRoute/>
-    </div>
+    </div>*/
   
  /* <div>
   <ListContainer>
     <RouteListe/>
-    <InputContainer type={"list"} buttonTitle={"ADD LIST"}/>
   </ListContainer>
   </div>*/
+ /* <div><Login/></div>*/
   );
   
 }
