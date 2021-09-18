@@ -4,6 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Title from "./Title";
 import Card from "../Card";
 import InputContainer from "../Input/InputContainer";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const useStyle = makeStyles((theme) =>({
     root: {
@@ -51,9 +52,30 @@ export default function List(props)
         <Paper className={classes.root}>
             <CssBaseline/>
              <Title title={titles} setTitle={setTitle} listId={props.list.id} idBoard={props.list.idBoard}/>
-             {cards.map((card)=>(
-                 <Card key={card.id} card={card} deleteCard={deleteCard} editCard={editCard} listId={props.list.id}/>
-             ))}
+            <DragDropContext onDragEnd={props.onDragEnd}>
+                <Droppable droppableId={String(props.list.id)}>
+                    {(provided, snapshot) => (
+                        <div ref={provided.innerRef}>
+                            {props.list.cards.map((card, index)=> (
+                                <Draggable
+                                    key={card.id}
+                                    draggableId={String(card.id)}
+                                    index={index}>
+                                    {(provided, snapshot) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}>
+                                            <Card key={card.id} card={card} deleteCard={deleteCard} editCard={editCard} listId={props.list.id}/>
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
              <InputContainer listId={props.list.id} addCard={addCard} type={"card"}/>
         </Paper>
     </div>
