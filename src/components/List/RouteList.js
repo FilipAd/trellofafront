@@ -41,20 +41,22 @@ export default function RouteList(props) {
     return result;
   };
 
-  const getList = id => { 
-    for(let i=0; i<lists.length; i++){
+  const getList = id => {
+    for (let i = 0; i < lists.length; i++) {
       let list = lists[i];
       console.log(list.id);
-    if (list.id==id)
-    return list.cards;
-  } };
-  const getListIndex = id => { 
-    for(let i=0; i<lists.length; i++){
+      if (list.id == id)
+        return list.cards;
+    }
+  };
+  const getListIndex = id => {
+    for (let i = 0; i < lists.length; i++) {
       let list = lists[i];
       console.log(list.id);
-    if (list.id==id)
-    return lists.indexOf(list);
-  } };
+      if (list.id == id)
+        return lists.indexOf(list);
+    }
+  };
 
   const onDragEnd = (result) => {
     // useEffect posalji newLists bazi
@@ -66,28 +68,30 @@ export default function RouteList(props) {
       return;
     }
     let change = move(
-        getList(source.droppableId),
-        getList(destination.droppableId),
-        source,
-        destination
+      getList(source.droppableId),
+      getList(destination.droppableId),
+      source,
+      destination
     );
     let newLists = JSON.parse(JSON.stringify(lists));
     // console.log(change[source.droppableId]);
     console.log(change);
-   newLists[getListIndex(source.droppableId)].cards = change[source.droppableId];
-   newLists[getListIndex(destination.droppableId)].cards = change[destination.droppableId];
-   setList(newLists);
+    newLists[getListIndex(source.droppableId)].cards = change[source.droppableId];
+    newLists[getListIndex(destination.droppableId)].cards = change[destination.droppableId];
+    setList(newLists);
   };
 
   return (
+    <DragDropContext onDragEnd={onDragEnd}>
     <ListContainer>
         {
           lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} />))
-        
-        
-}
-<InputContainer type={"list"} setList={setList} lists={lists} />
+
+
+        }
+      <InputContainer type={"list"} setList={setList} lists={lists} />
     </ListContainer>
+      </DragDropContext>
   )
 
 }
