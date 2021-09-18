@@ -8,7 +8,8 @@ import RouteList from './components/List/RouteList';
 import InputContainer from "./components/Input/InputContainer";
 import Board from './components/Board/Board';
 import RouteBoard from "./components/Board/RouteBoard";
-import Login from "./Login";
+import Login from "./components/Forms/Login";
+import SignUp from "./components/Forms/SignUp";
 //import { Router } from "react-router";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -28,7 +29,7 @@ export default function App()
     <Router>
     <Switch>
       <Route exact path='/' component={Login} />
-      <Route path="/sign-in" component={Login} />
+      <Route path="/signup" component={SignUp} />
       <Route path="/lists" render={(props) => <RouteList test={"test1111111"}/> } />
       <Route path="/boards" component={RouteBoard} />  
     </Switch>
