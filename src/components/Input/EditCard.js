@@ -47,10 +47,8 @@ export default function EditCard(props){
     {
     const karta={description: cardDescription,idList:props.listId,id:props.cardId};
      axios.put(cardsUrl+props.cardId,karta)
-        .then(response =>console.log(response));
-        props.editCard(karta);
-       props.setOpen(true);
-       
+        .then(response =>{console.log(response);props.editCard(response.data)});
+       props.setOpen(true);  
     };
 
 

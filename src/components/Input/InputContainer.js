@@ -30,7 +30,7 @@ export default function InputContainer(props)
     return (
         <div className={classes.root}>
             <Collapse in={open}>
-            <InputCard setOpen={setOpen} listId={props.listId} addCard={props.addCard} type={props.type} setList={props.setList} lists={props.lists}/>
+            <InputCard setOpen={setOpen} listId={props.listId} addCard={props.addCard} type={props.type} setList={props.setList} lists={props.lists} list={props.list}/>
             </Collapse>
             <Collapse in={!open}>
             <Paper className={classes.addCard} elevation={0} onClick={ ()=>setOpen(!open)} >

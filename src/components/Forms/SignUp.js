@@ -7,11 +7,12 @@ import "./Universal.css";
 
 export default function SignUp()
  {
-  const [email, setEmail] = useState("");
+  const [fullname, setFullName] = useState("");
+  const [username,setUsername]=useState("");
   const [password, setPassword] = useState("");
 
   function validateForm() {
-    return email.length > 0 && password.length > 0;
+    return username.length > 0 && password.length > 0 && fullname.length > 0;
   }
 
   function handleSubmit(event) {
@@ -81,19 +82,19 @@ export default function SignUp()
             className={classes.createInput}
             autoFocus
             type="fullname"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={fullname}
+            onChange={(e) => setFullName(e.target.value)}
           />
         </FormGroup>
 
         <FormGroup size="lg" controlId="username">
-          <FormLabel className={classes.label}>Email : </FormLabel>
+          <FormLabel className={classes.label}>Username : </FormLabel>
           <Form.Control
             className={classes.createInput}
             autoFocus
             type="username"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </FormGroup>
         

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import React, { useState, Component } from "react";
 import axios from 'axios';
 import { Button } from "@material-ui/core"
-import { listsUrl } from "../../URLs";
+import { listsUrl, cardsUrl } from "../../URLs";
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -20,18 +20,35 @@ flex-direction:row;
 export default function RouteList(props) {
   const [lists, setList] = useState([]);
   React.useEffect(() => { axios.get(listsUrl).then(res => { setList(res.data); console.log(res.data) }); }, []);
+
   if (!lists) return null;
 
   const move = (source, destination, droppableSource, droppableDestination) => {
-    console.log(source);
-    console.log(destination);
     const sourceClone = Array.from(source);
-    const destClone =
-      droppableSource.droppableId === droppableDestination.droppableId
-        ? sourceClone
-        : Array.from(destination);
     const [removed] = sourceClone.splice(droppableSource.index, 1);
-
+    let destClone = null;
+    if(droppableSource.droppableId === droppableDestination.droppableId){
+      destClone = sourceClone;
+    }
+    else {
+      destClone = Array.from(destination);
+      removed.idList = droppableDestination.droppableId;
+    }
+    sourceClone.map(card => {
+      if (card.dndIndex > removed.dndIndex) {
+        card.dndIndex--;
+        axios.put(cardsUrl + card.id, card).then((result) => { console.log('result' + result) });
+      }
+    })
+    removed.dndIndex = droppableDestination.index;
+    axios.put(cardsUrl + removed.id, removed).then((result) => { console.log('result' + result) });
+    destClone.map(card => {
+      console.log('destination: ' + card.dndIndex + ' > ' + removed.dndIndex);
+      if (card.dndIndex >= removed.dndIndex) {
+        card.dndIndex++;
+        axios.put(cardsUrl + card.id, card).then((result) => { console.log('result' + result) });
+      }
+    })
     destClone.splice(droppableDestination.index, 0, removed);
 
     const result = {};
@@ -83,15 +100,14 @@ export default function RouteList(props) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-    <ListContainer>
+      <ListContainer>
         {
-          lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} />))
-
+          lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} setList={setList} lists={lists} />))
 
         }
-      <InputContainer type={"list"} setList={setList} lists={lists} />
-    </ListContainer>
-      </DragDropContext>
+        <InputContainer type={"list"} setList={setList} lists={lists} />
+      </ListContainer>
+    </DragDropContext>
   )
 
 }

@@ -62,12 +62,11 @@ export default function InputCard(props){
     }
     else if(props.type==="card")
     {
-    let card={description: cardDescription,idList:props.listId};
-    let cardFinal={id:-1,description: cardDescription,idList:props.listId};
-    console.log(+props.listId);
+    console.log(props);
+    let card={description: cardDescription,idList:props.listId,dndIndex:props.list.cards.length};//dndIndex:props.list.card.length
+    console.log(props.listId);
     axios.post(cardsUrl,card)
-        .then(response => {console.log(response);cardFinal["id"]=response.data.id});
-        props.addCard(cardFinal);
+        .then(response => {console.log(response);props.addCard(response.data)});
         setCardDescription(""); 
         props.setOpen(false);
     }
