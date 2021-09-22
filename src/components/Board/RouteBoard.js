@@ -1,4 +1,4 @@
-import React, { Component, useState,useEffect} from "react";
+import React, { Component, useState,useEffect, useDebugValue} from "react";
 import {Paper,Typography,CssBaseline,InputBase} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import { withTheme } from "styled-components";
@@ -47,8 +47,14 @@ export default function RouteBoard()
  
   const classes=useStyle();
   const [boards,setBoard]=useState(null);
-    
-    
+  const [boardTitle,setBoardTitle]=useState("");
+
+  function handleOnChange(e) 
+    {
+        setBoardTitle(e.target.value);
+    }
+
+
     React.useEffect(()=>{axios.get(boardsUrl).then(res=>{setBoard(res.data);console.log(res.data)});},[]);
 
     if(!boards) return null;
@@ -71,6 +77,20 @@ export default function RouteBoard()
         <InputBase
           placeholder="Your boards title..."
           type="text"
+          onChange={handleOnChange}
+          onKeyDown={(e)=>{  if(e.key=="Enter")
+                                {   
+                                    e.preventDefault();
+                                    setBoardTitle(boardTitle);
+                                    let updatedBoards=[];
+                                    let newBoard={name:boardTitle,id:-1,idOrganization:1};
+                                    axios.post(boardsUrl,newBoard).then(res=>{updatedBoards=[...boards,res.data];setBoard(updatedBoards)}).catch("error");
+                                    
+                                    
+                                    
+                                } 
+
+                    }}
         />
         </form>
 
@@ -82,11 +102,9 @@ export default function RouteBoard()
             </div> 
         <div align="center">
             {
-           boards.map(board=>{return <Board title={board.name} idBoard={board.id}/>})
+           boards.map(board=>{return <Board board={board} setBoard={setBoard} boards={boards} setBoardTitle={setBoardTitle} boardTitle={boardTitle}/>})
             }
         </div>
-
-       
 
         </div>
         );

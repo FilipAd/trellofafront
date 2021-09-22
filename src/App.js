@@ -12,6 +12,7 @@ import Login from "./components/Forms/Login";
 import SignUp from "./components/Forms/SignUp";
 //import { Router } from "react-router";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {boardsUrl,listsUrl,cardsUrl,signUpUrl} from "./URLs";
 
 
 
@@ -29,9 +30,9 @@ export default function App()
     <Router>
     <Switch>
       <Route exact path='/' component={Login} />
-      <Route path="/signup" component={SignUp} />
-      <Route path="/lists" render={(props) => <RouteList test={"test1111111"}/> } />
-      <Route path="/boards" component={RouteBoard} />  
+      <Route exact path='/signup' component={SignUp} />
+      <Route exact path="/lists" render={(props) => <RouteList test={"test1111111"}/> } />
+      <Route exact path="/boards" component={RouteBoard} />  
     </Switch>
     </Router>
   

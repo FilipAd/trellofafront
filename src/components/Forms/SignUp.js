@@ -3,20 +3,40 @@ import Form from "react-bootstrap/Form";
 import {makeStyles,fade} from "@material-ui/core/styles";
 import {Paper,InputBase,Button,IconButton,FormLabel,FormGroup,FormControl} from "@material-ui/core"
 import "./Universal.css";
+import axios from "axios";
+import {signUpUrl} from "../../URLs";
+import { Route, Redirect } from 'react-router';
 
 
 export default function SignUp()
  {
-  const [fullname, setFullName] = useState("");
-  const [username,setUsername]=useState("");
-  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [userName,setUsername]=useState("");
+  const [passw, setPassword] = useState("");
 
-  function validateForm() {
-    return username.length > 0 && password.length > 0 && fullname.length > 0;
+  function validateForm() 
+  {
+    return userName.length > 0 && passw.length > 0 && fullName.length > 0;
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event) 
+  {
     event.preventDefault();
+  }
+
+  function createUser()
+  {
+    let user={fullname:fullName,username:userName,password:passw};
+    axios.post(signUpUrl,user).then(<Redirect to="/login"></Redirect>).catch(function (error)
+    {
+      if(error.response.status)
+      {
+        alert("This username is already taken. Please choose another name.");
+      }
+      else
+      alert("The error occurred due to server problem.");
+    });
+
   }
 
   const useStyle = makeStyles((theme) =>({
@@ -82,7 +102,7 @@ export default function SignUp()
             className={classes.createInput}
             autoFocus
             type="fullname"
-            value={fullname}
+            value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
         </FormGroup>
@@ -93,7 +113,7 @@ export default function SignUp()
             className={classes.createInput}
             autoFocus
             type="username"
-            value={username}
+            value={userName}
             onChange={(e) => setUsername(e.target.value)}
           />
         </FormGroup>
@@ -103,13 +123,13 @@ export default function SignUp()
           <Form.Control
             className={classes.createInput}
             type="password"
-            value={password}
+            value={passw}
             onChange={(e) => setPassword(e.target.value)}
           />
         </FormGroup>
 
 
-        <Button block size="lg" type="submit" disabled={!validateForm()} className={classes.button}>
+        <Button block size="lg" type="submit" disabled={!validateForm()} className={classes.button} onMouseDown={()=>createUser()}>
           CREATE
         </Button>
       </Form>
