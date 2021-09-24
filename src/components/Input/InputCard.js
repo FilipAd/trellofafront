@@ -16,10 +16,11 @@ const useStyle = makeStyles((theme) =>({
 
     },
     btnConfirm:{
-        background:"#5AAC44",
-        color:"#fff",
+        background:"#286ad4 ",
+        color:"white",
         "&:hover":{
-            background:fade("#5AAC44",0.75),
+            background:fade("#b9ebea",0.75),
+            color:"black",
         }
     },
     confirm:{
@@ -51,7 +52,7 @@ export default function InputCard(props){
     if(props.type==="list")
     {
         
-        var list={id:-1,name:listTitle,idBoard:1,cards:[]}; //OVOOOOOO PREPRAVITI KAD DODJU TABLE
+        var list={id:-1,name:listTitle,idBoard:localStorage.getItem("boardId"),cards:[]}; //OVOOOOOO PREPRAVITI KAD DODJU TABLE
         var newLists=[];
         axios.post(listsUrl,list)
         .then(response => {console.log(response.data.id);props.setList([...props.lists,response.data])});

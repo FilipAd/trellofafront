@@ -3,9 +3,11 @@ import styled from "styled-components";
 import React, { useState, Component } from "react";
 import axios from 'axios';
 import { Button } from "@material-ui/core"
-import { listsUrl, cardsUrl } from "../../URLs";
+import { listsUrl, cardsUrl,boardsUrl,listsUrlEnd } from "../../URLs";
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {makeStyles,fade} from "@material-ui/core/styles";
+import Background from "../../background6.jpg"
 
 
 const ListContainer = styled.div
@@ -13,13 +15,23 @@ const ListContainer = styled.div
 display:flex;
 flex-direction:row;
 `;
+const useStyle = makeStyles((theme) =>({
 
+  root:
+  {
+  width:"100%",
+  height:"100vh",
+  backgroundImage:`URL(${Background})`,
+  }
+
+}))
 
 // setList(res.data)});
 
 export default function RouteList(props) {
+  const classes=useStyle();
   const [lists, setList] = useState([]);
-  React.useEffect(() => { axios.get(listsUrl).then(res => { setList(res.data); console.log(res.data) }); }, []);
+  React.useEffect(() => { axios.get(boardsUrl+localStorage.getItem("boardId")+listsUrlEnd).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
 
   if (!lists) return null;
 
@@ -99,15 +111,16 @@ export default function RouteList(props) {
   };
 
   return (
+    <div className={classes.root}>
     <DragDropContext onDragEnd={onDragEnd}>
       <ListContainer>
         {
           lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} setList={setList} lists={lists} />))
-
         }
         <InputContainer type={"list"} setList={setList} lists={lists} />
       </ListContainer>
     </DragDropContext>
+    </div>
   )
 
 }

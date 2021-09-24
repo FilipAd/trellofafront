@@ -6,6 +6,7 @@ import "./Universal.css";
 import axios from "axios";
 import {signUpUrl} from "../../URLs";
 import { Route, Redirect } from 'react-router';
+import Background from "../../background6.jpg"
 
 
 export default function SignUp()
@@ -55,8 +56,9 @@ export default function SignUp()
         marginLeft:"50px",
         width:"320px",
         alignSelf: "center",
-        background:"#31abb5",
+        background:"#2897a2",
         padding: "20px",
+        boxShadow: "0 2px 4px grey",
         color:"#fff",
         "&:hover":{
             background:fade("#3BBFBF",0.75),
@@ -67,8 +69,14 @@ export default function SignUp()
         fontSize:"20px",
         fontFamily:"Lucida Handwriting",
         padding: "10px",
+        color:"black",
       },
-
+      root:
+      {
+        backgroundImage:`URL(${Background})`,
+        width:"100%",
+        height:"100vh",
+      },
       title:{
         margineLeft:"100px",
         fontSize:"30px",
@@ -92,6 +100,7 @@ export default function SignUp()
    const classes=useStyle();
 
   return (
+    <div className={classes.root}>
     <div className="Login">
       <Form onSubmit={handleSubmit}>
       <h1 className={classes.title}>Sign-up:</h1>
@@ -133,6 +142,7 @@ export default function SignUp()
           CREATE
         </Button>
       </Form>
+    </div>
     </div>
   );
 }

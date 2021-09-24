@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import {Paper,Typography,CssBaseline,IconButton,InputBase,Collapse} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles,fade} from "@material-ui/core/styles";
 import { withTheme } from "styled-components";
 import { findAllInRenderedTree } from "react-dom/test-utils";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
-import {boardsUrl} from "../../URLs";
+import {boardsUrl,boardsUrlEnd,listsUrlEnd} from "../../URLs";
 import ClearIcon from '@material-ui/icons/Clear';
 import CheckIcon from '@material-ui/icons/Check';
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
 
 
 
@@ -16,7 +18,6 @@ const useStyle = makeStyles((theme) =>({
 
     root:
     {
-        bacground:"red",
         align:"center",
     },
     board: {
@@ -34,11 +35,27 @@ const useStyle = makeStyles((theme) =>({
         color:"white",
         fontSize:"20px",
         multiline:"true",
-        width : '60%',
-        height:'60px',
-        background:"#80cbc4",
+        width : '40%',
+        height:'55%',
+        background:"#467e83",
+        borderRadius:"30px",
         padding:theme.spacing(1,1,1,2),
         margin:theme.spacing(1),
+        boxShadow: "0 10px 6px #5a6566",
+    },
+    link:
+    {
+        
+        fontSize:"25px",
+        color:"#e4eced",
+        borderRadius:"20px",
+        "&:hover":{
+            background:fade("#79a1a5",0.75),
+        },
+    },
+    button:
+    {
+        color:"#2a4b4e",
     },
     
 }))
@@ -95,15 +112,15 @@ export default function Board(props)
   
     
     return(
-        <div>
+        <div className={classes.root}>
             <Collapse in={!open}>  
             <Paper className={classes.board}>
-                {props.board.name} 
-            <div>
-            <IconButton  onMouseDown={()=>openEditForm(props.board.id)}>
+            <Link className={classes.link} to={listsUrlEnd} onMouseDown={()=>localStorage.setItem("boardId",props.board.id)}> {props.board.name} </Link>
+            <div className={classes.button}>
+            <IconButton className={classes.button}  onMouseDown={()=>openEditForm(props.board.id)}>
                 <EditIcon/>
             </IconButton>
-            <IconButton onMouseDown={()=>handleDelete(props.board.id)}>
+            <IconButton  className={classes.button} onMouseDown={()=>handleDelete(props.board.id)}>
                 <DeleteIcon/>
             </IconButton>
             </div>
@@ -126,12 +143,13 @@ export default function Board(props)
             fullWidth
            />   
         <div>
-        <IconButton onMouseDown={()=>{setOpen(!open)}}>
-                <ClearIcon/>
-        </IconButton>
         <IconButton onMouseDown={()=>{confirmEdit(props.board.id)}}>
                 <CheckIcon/>
         </IconButton>
+        <IconButton onMouseDown={()=>{setOpen(!open)}}>
+                <ClearIcon/>
+        </IconButton>
+        
         </div>
             </Paper>
             </Collapse>

@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import {makeStyles,fade} from "@material-ui/core/styles";
 import {Paper,InputBase,Button,IconButton,FormLabel,FormGroup,FormControl} from "@material-ui/core"
 import "./Universal.css";
+import Background from "../../background6.jpg"
 
 
 export default function Login() {
@@ -28,18 +29,25 @@ export default function Login() {
         marginLeft:"50px",
         width:"320px",
         alignSelf: "center",
-        background:"#31abb5",
+        background:"#2897a2",
         padding: "20px",
         color:"#fff",
         "&:hover":{
             background:fade("#3BBFBF",0.75),
         }
       },
+      root:
+      {
+        backgroundImage:`URL(${Background})`,
+        width:"100%",
+        height:"100vh",
+      },
       label:
       {
         fontSize:"20px",
         fontFamily:"Lucida Handwriting",
         padding: "10px",
+        color:"black",
       },
 
       title:{
@@ -65,7 +73,8 @@ export default function Login() {
    const classes=useStyle();
 
   return (
-    <div className="Login">
+    <div className={classes.root}>
+    <div className="Login" >
       
       <Form onSubmit={handleSubmit}>
       <h1 className={classes.title}>Login :</h1>
@@ -92,6 +101,7 @@ export default function Login() {
           Login
         </Button>
       </Form>
+      </div>
     </div>
   );
 }

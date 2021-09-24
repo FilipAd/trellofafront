@@ -1,10 +1,13 @@
 import React, { Component, useState,useEffect, useDebugValue} from "react";
 import {Paper,Typography,CssBaseline,InputBase} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles,fade} from "@material-ui/core/styles";
 import { withTheme } from "styled-components";
 import Board from "./Board";
 import axios from "axios";
 import {boardsUrl} from "../../URLs";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import RouteList from "../List/RouteList";
+import Background from "../../background6.jpg"
 
 
 const useStyle = makeStyles((theme) =>({
@@ -16,9 +19,9 @@ const useStyle = makeStyles((theme) =>({
     padding: "10px",
     boxSizing: "borderBox",
     borderRadius: "3px",
-    border: "none",
+    border: "solid",
     outlineColor: "blue",
-    boxShadow: "0 2px 4px grey",
+    boxShadow: "0 6px 6px grey",
     alignSelf: "center",
     },
 
@@ -31,7 +34,9 @@ const useStyle = makeStyles((theme) =>({
     },
     root:{
         align:"center",
+        height:"100vh",
         padding:"30px",
+        backgroundImage:`URL(${Background})`,
     },
    title:{
         fontSize:"50px",
@@ -42,7 +47,7 @@ const useStyle = makeStyles((theme) =>({
 
 
 
-export default function RouteBoard()
+export default function RouteBoard(props)
 {
  
   const classes=useStyle();
@@ -85,9 +90,7 @@ export default function RouteBoard()
                                     let updatedBoards=[];
                                     let newBoard={name:boardTitle,id:-1,idOrganization:1};
                                     axios.post(boardsUrl,newBoard).then(res=>{updatedBoards=[...boards,res.data];setBoard(updatedBoards)}).catch("error");
-                                    
-                                    
-                                    
+  
                                 } 
 
                     }}
@@ -100,13 +103,15 @@ export default function RouteBoard()
         <div className={classes.title} align="center">
             <h>BOARDS</h>
             </div> 
-        <div align="center">
-            {
-           boards.map(board=>{return <Board board={board} setBoard={setBoard} boards={boards} setBoardTitle={setBoardTitle} boardTitle={boardTitle}/>})
-            }
+        <div align="center"> 
+            { 
+           boards.map(board=>{return <Board board={board} setBoard={setBoard} setBoardId={props.setBoardId} boards={boards} setBoardTitle={setBoardTitle} boardTitle={boardTitle}/>})
+            }   
         </div>
 
         </div>
+        
         );
+        
     }
 

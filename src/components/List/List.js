@@ -12,7 +12,7 @@ import axios from "axios";
 const useStyle = makeStyles((theme) => ({
     root: {
         width: '300px',
-        background: "#EBECF0",
+        background: "#a7c2ee",
         marginLeft: theme.spacing(1),
         marginTop: theme.spacing(1),
     },

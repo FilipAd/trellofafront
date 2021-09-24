@@ -25,14 +25,15 @@ flex-direction:row;
 
 export default function App() 
 {
+  const [boardId,setBoardId]=useState("0");
+  console.log("RUTAAAAAAAAAAAAAAAAAAA:"+boardId);
   return(
-
     <Router>
     <Switch>
       <Route exact path='/' component={Login} />
       <Route exact path='/signup' component={SignUp} />
-      <Route exact path="/lists" render={(props) => <RouteList test={"test1111111"}/> } />
-      <Route exact path="/boards" component={RouteBoard} />  
+      <Route exect path='/lists' render={(props) => <RouteList boardId={boardId} setBoardId={setBoardId}/> } />
+      <Route exact path="/boards" render={(props) => <RouteBoard setBoardId={setBoardId}/> }  />  
     </Switch>
     </Router>
   
