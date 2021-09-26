@@ -10,7 +10,6 @@ import Board from './components/Board/Board';
 import RouteBoard from "./components/Board/RouteBoard";
 import Login from "./components/Forms/Login";
 import SignUp from "./components/Forms/SignUp";
-//import { Router } from "react-router";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import {boardsUrl,listsUrl,cardsUrl,signUpUrl} from "./URLs";
 
@@ -26,12 +25,12 @@ flex-direction:row;
 export default function App() 
 {
   const [boardId,setBoardId]=useState("0");
-  console.log("RUTAAAAAAAAAAAAAAAAAAA:"+boardId);
   return(
     <Router>
     <Switch>
-      <Route exact path='/' component={Login} />
+      <Route exact path='/' component={SignUp} />
       <Route exact path='/signup' component={SignUp} />
+      <Route exact path='/login' component={Login} />
       <Route exect path='/lists' render={(props) => <RouteList boardId={boardId} setBoardId={setBoardId}/> } />
       <Route exact path="/boards" render={(props) => <RouteBoard setBoardId={setBoardId}/> }  />  
     </Switch>

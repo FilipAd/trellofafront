@@ -4,9 +4,10 @@ import {makeStyles,fade} from "@material-ui/core/styles";
 import {Paper,InputBase,Button,IconButton,FormLabel,FormGroup,FormControl} from "@material-ui/core"
 import "./Universal.css";
 import axios from "axios";
-import {signUpUrl} from "../../URLs";
-import { Route, Redirect } from 'react-router';
+import {signUpUrl,loginEnd} from "../../URLs";
+import { Redirect,Link} from "react-router-dom";
 import Background from "../../background6.jpg"
+import Login from "./Login";
 
 
 export default function SignUp()
@@ -14,6 +15,8 @@ export default function SignUp()
   const [fullName, setFullName] = useState("");
   const [userName,setUsername]=useState("");
   const [passw, setPassword] = useState("");
+  const [redirect,setRedirect]=useState(false);
+
 
   function validateForm() 
   {
@@ -28,7 +31,8 @@ export default function SignUp()
   function createUser()
   {
     let user={fullname:fullName,username:userName,password:passw};
-    axios.post(signUpUrl,user).then(<Redirect to="/login"></Redirect>).catch(function (error)
+    
+    axios.post(signUpUrl,user).then(()=>{setRedirect(true)}).catch(function (error)
     {
       if(error.response.status)
       {
@@ -70,6 +74,8 @@ export default function SignUp()
         fontFamily:"Lucida Handwriting",
         padding: "10px",
         color:"black",
+        textShadow: "2px 0 0 #d2d9db, -2px 0 0 #d2d9db, 0 2px 0 #d2d9db, 0 -2px 0 #d2d9db, 1px 1px #d2d9db, -1px -1px 0 #d2d9db, 1px -1px 0 #d2d9db, -1px 1px 0 #d2d9db",
+        fontWeight:"bold",
       },
       root:
       {
@@ -81,7 +87,19 @@ export default function SignUp()
         margineLeft:"100px",
         fontSize:"30px",
         fontFamily:"Lucida Handwriting",
+        textShadow: "2px 0 0 #d2d9db, -2px 0 0 #d2d9db, 0 2px 0 #d2d9db, 0 -2px 0 #d2d9db, 1px 1px #d2d9db, -1px -1px 0 #d2d9db, 1px -1px 0 #d2d9db, -1px 1px 0 #d2d9db",
         paddingLeft: "150px",
+      },
+      link:{
+        color:"yellow",
+        margineLeft:"100px",
+        fontSize:"21px",
+        paddingLeft:"10px",
+        textShadow: "0 0 5px black",
+        "&:hover":{
+          color:"#3345ff"
+      },
+
       },
       createInput : {
         margine:"10 10 10 10",
@@ -98,6 +116,11 @@ export default function SignUp()
         },
    }))
    const classes=useStyle();
+
+   if(redirect==true)
+   {
+     return <Redirect to={loginEnd}/>
+   }
 
   return (
     <div className={classes.root}>
@@ -137,7 +160,7 @@ export default function SignUp()
           />
         </FormGroup>
 
-
+        <Link to={loginEnd} className={classes.link}>Already have an account? Sign in</Link>
         <Button block size="lg" type="submit" disabled={!validateForm()} className={classes.button} onMouseDown={()=>createUser()}>
           CREATE
         </Button>

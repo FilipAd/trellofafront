@@ -4,18 +4,33 @@ import {makeStyles,fade} from "@material-ui/core/styles";
 import {Paper,InputBase,Button,IconButton,FormLabel,FormGroup,FormControl} from "@material-ui/core"
 import "./Universal.css";
 import Background from "../../background6.jpg"
+import axios from "axios";
+import {loginUrl} from "../../URLs";
 
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userName, setUsername] = useState("");
+  const [passw, setPassword] = useState("");
 
   function validateForm() {
-    return email.length > 0 && password.length > 0;
+    return userName.length > 0 && passw.length > 0;
   }
 
-  function handleSubmit(event) {
+  function handleSubmit(event) 
+  {
     event.preventDefault();
+    let credentials={username:userName,password:passw};
+    axios.post(loginUrl,credentials).then(res=>console.log(res.data)).catch(function (error)
+    {
+      if(error.response.status===401)
+      {
+        alert("The user name or password is incorrect");
+      }
+      else
+      {
+        alert("The error occurred due to server problem.");
+      }
+    });
   }
 
   const useStyle = makeStyles((theme) =>({
@@ -48,6 +63,8 @@ export default function Login() {
         fontFamily:"Lucida Handwriting",
         padding: "10px",
         color:"black",
+        fontWeight:"bold",
+        textShadow: "2px 0 0 #d2d9db, -2px 0 0 #d2d9db, 0 2px 0 #d2d9db, 0 -2px 0 #d2d9db, 1px 1px #d2d9db, -1px -1px 0 #d2d9db, 1px -1px 0 #d2d9db, -1px 1px 0 #d2d9db",
       },
 
       title:{
@@ -55,6 +72,7 @@ export default function Login() {
         fontSize:"30px",
         fontFamily:"Lucida Handwriting",
         paddingLeft: "150px",
+        textShadow: "2px 0 0 #d2d9db, -2px 0 0 #d2d9db, 0 2px 0 #d2d9db, 0 -2px 0 #d2d9db, 1px 1px #d2d9db, -1px -1px 0 #d2d9db, 1px -1px 0 #d2d9db, -1px 1px 0 #d2d9db",
       },
       createInput : {
         margine:"10 10 10 10",
@@ -84,8 +102,8 @@ export default function Login() {
             className={classes.createInput}
             autoFocus
             type="username"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={userName}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </FormGroup>
         <FormGroup size="lg" controlId="password">
@@ -93,11 +111,11 @@ export default function Login() {
           <Form.Control
             className={classes.createInput}
             type="password"
-            value={password}
+            value={passw}
             onChange={(e) => setPassword(e.target.value)}
           />
         </FormGroup>
-        <Button block size="lg" type="submit" disabled={!validateForm()} className={classes.button}>
+        <Button block size="lg" type="submit" disabled={!validateForm()} className={classes.button} >
           Login
         </Button>
       </Form>

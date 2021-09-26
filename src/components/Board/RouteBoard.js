@@ -27,7 +27,7 @@ const useStyle = makeStyles((theme) =>({
 
     createTitle :{
         fontSize: "20px",
-        color: "black",
+        color: "white",
         fontWeight: "bold",
         fontFamily: "Lucida Handwriting",
         align:"center",
