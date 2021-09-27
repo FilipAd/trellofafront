@@ -1,9 +1,8 @@
 import List from "./List";
 import styled from "styled-components";
-import React, { useState, Component } from "react";
+import React, { useState,} from "react";
 import axios from 'axios';
-import { Button } from "@material-ui/core"
-import { listsUrl, cardsUrl,boardsUrl,listsUrlEnd } from "../../URLs";
+import { cardsUrl,boardsUrl,listsUrlEnd } from "../../URLs";
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {makeStyles,fade} from "@material-ui/core/styles";
@@ -31,7 +30,13 @@ const useStyle = makeStyles((theme) =>({
 export default function RouteList(props) {
   const classes=useStyle();
   const [lists, setList] = useState([]);
-  React.useEffect(() => { axios.get(boardsUrl+localStorage.getItem("boardId")+listsUrlEnd).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
+  let configToken=null;
+  let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
+  React.useEffect(() => { axios.get(boardsUrl+localStorage.getItem("boardId")+listsUrlEnd,configToken).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
 
   if (!lists) return null;
 

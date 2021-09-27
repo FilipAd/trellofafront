@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import {makeStyles,fade} from "@material-ui/core/styles";
-import {Paper,InputBase,Button,IconButton,FormLabel,FormGroup,FormControl} from "@material-ui/core"
+import {Button,FormLabel,FormGroup} from "@material-ui/core"
 import "./Universal.css";
 import axios from "axios";
 import {signUpUrl,loginEnd} from "../../URLs";
 import { Redirect,Link} from "react-router-dom";
 import Background from "../../background6.jpg"
-import Login from "./Login";
+
 
 
 export default function SignUp()
@@ -117,7 +117,7 @@ export default function SignUp()
    }))
    const classes=useStyle();
 
-   if(redirect==true)
+   if(redirect)
    {
      return <Redirect to={loginEnd}/>
    }
@@ -128,7 +128,7 @@ export default function SignUp()
       <Form onSubmit={handleSubmit}>
       <h1 className={classes.title}>Sign-up:</h1>
 
-        <FormGroup size="lg" controlId="fullname">
+        <FormGroup size="lg" controlid="fullname">
           <FormLabel className={classes.label}>Full Name :</FormLabel>
           <Form.Control
             className={classes.createInput}
@@ -139,7 +139,7 @@ export default function SignUp()
           />
         </FormGroup>
 
-        <FormGroup size="lg" controlId="username">
+        <FormGroup size="lg" controlid="username">
           <FormLabel className={classes.label}>Username : </FormLabel>
           <Form.Control
             className={classes.createInput}
@@ -150,7 +150,7 @@ export default function SignUp()
           />
         </FormGroup>
         
-        <FormGroup size="lg" controlId="password">
+        <FormGroup size="lg" controlid="password">
           <FormLabel className={classes.label}>Password :</FormLabel>
           <Form.Control
             className={classes.createInput}

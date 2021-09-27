@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import {Paper,Typography,CssBaseline,IconButton,InputBase,Collapse} from "@material-ui/core";
+import {Paper,IconButton,InputBase,Collapse} from "@material-ui/core";
 import {makeStyles,fade} from "@material-ui/core/styles";
-import { withTheme } from "styled-components";
-import { findAllInRenderedTree } from "react-dom/test-utils";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
-import {boardsUrl,boardsUrlEnd,listsUrlEnd} from "../../URLs";
+import {boardsUrl,listsUrlEnd} from "../../URLs";
 import ClearIcon from '@material-ui/icons/Clear';
 import CheckIcon from '@material-ui/icons/Check';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 
 

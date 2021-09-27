@@ -1,26 +1,35 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import {makeStyles,fade} from "@material-ui/core/styles";
-import {Paper,InputBase,Button,IconButton,FormLabel,FormGroup,FormControl} from "@material-ui/core"
+import {Button,FormLabel,FormGroup} from "@material-ui/core"
 import "./Universal.css";
 import Background from "../../background6.jpg"
 import axios from "axios";
-import {loginUrl} from "../../URLs";
+import {loginUrl,boardsUrlEnd} from "../../URLs";
+import { Redirect } from "react-router";
 
 
-export default function Login() {
+export default function Login(props) {
   const [userName, setUsername] = useState("");
   const [passw, setPassword] = useState("");
+  const [authenticationPassed,setAuthenticationPassed]=useState(false);
 
   function validateForm() {
     return userName.length > 0 && passw.length > 0;
+  }
+
+  function storeUser(user)
+  {
+    props.setUser(user);
+    localStorage.setItem("user",JSON.stringify(user));
+
   }
 
   function handleSubmit(event) 
   {
     event.preventDefault();
     let credentials={username:userName,password:passw};
-    axios.post(loginUrl,credentials).then(res=>console.log(res.data)).catch(function (error)
+    axios.post(loginUrl,credentials).then(res=>{console.log(res.data);storeUser(res.data);setAuthenticationPassed(true)}).catch(function (error)
     {
       if(error.response.status===401)
       {
@@ -90,13 +99,19 @@ export default function Login() {
    }))
    const classes=useStyle();
 
+  if(authenticationPassed)
+  {
+    return <Redirect to={boardsUrlEnd} />
+    setAuthenticationPassed(false);
+  }
+
   return (
     <div className={classes.root}>
     <div className="Login" >
       
       <Form onSubmit={handleSubmit}>
       <h1 className={classes.title}>Login :</h1>
-        <FormGroup size="lg" controlId="username">
+        <FormGroup size="lg" controlid="username">
           <FormLabel className={classes.label}>Username :</FormLabel>
           <Form.Control
             className={classes.createInput}
@@ -106,7 +121,7 @@ export default function Login() {
             onChange={(e) => setUsername(e.target.value)}
           />
         </FormGroup>
-        <FormGroup size="lg" controlId="password">
+        <FormGroup size="lg" controlid="password">
           <FormLabel className={classes.label}>Password :</FormLabel>
           <Form.Control
             className={classes.createInput}

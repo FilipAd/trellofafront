@@ -1,36 +1,26 @@
-
-import List from "./components/List/List";
-import styled from "styled-components";
-import React,{ useState , Component} from "react";
-import axios from 'axios';
-import {Button} from "@material-ui/core"
+import React,{ useState ,} from "react";
 import RouteList from './components/List/RouteList';
-import InputContainer from "./components/Input/InputContainer";
-import Board from './components/Board/Board';
 import RouteBoard from "./components/Board/RouteBoard";
 import Login from "./components/Forms/Login";
 import SignUp from "./components/Forms/SignUp";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import {boardsUrl,listsUrl,cardsUrl,signUpUrl} from "./URLs";
+import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 
 
 
-const ListContainer=styled.div
-`
-display:flex;
-flex-direction:row;
-`;
 
 export default function App() 
 {
+
+  const[user,setUser]=useState(null);
   const [boardId,setBoardId]=useState("0");
+
   return(
     <Router>
     <Switch>
       <Route exact path='/' component={SignUp} />
       <Route exact path='/signup' component={SignUp} />
-      <Route exact path='/login' component={Login} />
+      <Route exect path='/login' render={(props) => <Login setUser={setUser}/> } />
       <Route exect path='/lists' render={(props) => <RouteList boardId={boardId} setBoardId={setBoardId}/> } />
       <Route exact path="/boards" render={(props) => <RouteBoard setBoardId={setBoardId}/> }  />  
     </Switch>
