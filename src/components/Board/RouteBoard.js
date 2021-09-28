@@ -39,6 +39,10 @@ const useStyle = makeStyles((theme) =>({
         height:"100vh",
         padding:"30px",
         backgroundImage:`URL(${Background})`,
+        backgroundPosition:"center",
+        backgroundRepeat:"no-repeat",
+        backgroundSize:"cover",
+        overflowX: "scroll",
     },
    title:{
         fontSize:"50px",
@@ -69,6 +73,17 @@ export default function RouteBoard(props)
   const [boardTitle,setBoardTitle]=useState("");
   const [redirectToLogin,setRedirectToLogin]=useState(false);
  
+  let userFromStorage=JSON.parse(localStorage.getItem("user"));
+  let configToken=null;
+  let userFromStorageId=null;
+  if(userFromStorage!==null)
+  {
+  configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+  userFromStorageId=JSON.parse(localStorage.getItem("user")).id;
+  }
+ 
+ 
+
 
     function handleOnChange(e) 
     {
@@ -87,34 +102,28 @@ export default function RouteBoard(props)
         let updatedBoards=[]
         let newBoard={name:boardTitle,id:-1,idOrganization:1}
         let newBoardId=0
-        axios.post(boardsUrl,newBoard).then(res=>{updatedBoards=[...boards,res.data];setBoard(updatedBoards);
+        axios.post(boardsUrl,newBoard,configToken).then(res=>{updatedBoards=[...boards,res.data];setBoard(updatedBoards);
         let newBoardHasMembers={idBoard:res.data.id,idMember:JSON.parse(localStorage.getItem("user")).id}
-        axios.post(boardHasMembersUrl,newBoardHasMembers).then(res=>console.log("proslo")).catch(err=>{alert("Error")})
+        axios.post(boardHasMembersUrl,newBoardHasMembers,configToken).then(res=>console.log("proslo")).catch(err=>{alert("Error")})
         }).catch(err=>{alert("Error")})
-      //  console.log="EVO IDEA :"+newBoardId
-       // let newBoardHasMembers={idBoard:newBoardId,idMember:JSON.parse(localStorage.getItem("user")).id}
-      //  axios.post(boardHasMembersUrl,newBoardHasMembers).then(res=>console.log("proslo")).catch(err=>{alert("Error")})
         
     }
 
-    let userFromStorage=JSON.parse(localStorage.getItem("user"));
-    let configToken=null;
-    if(userFromStorage!==null)
-    {
-    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
-    }
 
-    React.useEffect(()=>{axios.get(membersUrl+userFromStorage.id+boardsByMemberEnd,configToken).then(res=>{setBoard(res.data);console.log(res.data)});},[]);
+    
+   
+    React.useEffect(()=>{axios.get(membersUrl+userFromStorageId+boardsByMemberEnd,configToken).then(res=>{setBoard(res.data);console.log(res.data)});},[]);
 
     if(!boards) return null;
 
   
-    
-
-  if(redirectToLogin)
-  {
+    if(redirectToLogin || userFromStorage==null)
+    {
       return <Redirect to={loginEnd}/>
-  }
+    }
+
+
+  
 
     return(
         <div className={classes.root}>
@@ -125,11 +134,12 @@ export default function RouteBoard(props)
         <div align="right">
         <Button className={classes.btnConfirm} onMouseDown={()=>handleLogout()}>LOGOUT</Button>
         </div>
-        <div className={classes.createInput}>
+        
 
 
-        <form >
+        
         <InputBase
+            className={classes.createInput}
           placeholder="Your boards title..."
           type="text"
           onChange={handleOnChange}
@@ -140,12 +150,11 @@ export default function RouteBoard(props)
                                     
                                 } 
 
-                    }}
-        />
-        </form>
+                        }}/>
+        
 
 
-        </div>
+       
         </div>
         <div className={classes.title} align="center">BOARDS</div> 
         <div align="center"> 

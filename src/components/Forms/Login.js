@@ -102,7 +102,6 @@ export default function Login(props) {
   if(authenticationPassed)
   {
     return <Redirect to={boardsUrlEnd} />
-    setAuthenticationPassed(false);
   }
 
   return (

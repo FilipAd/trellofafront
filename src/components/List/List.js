@@ -21,7 +21,14 @@ export default function List(props) {
 
     const classes = useStyle();
     const [cards, setCards] = useState(props.list.cards);
-    const [titles, setTitle] = useState(props.list.name)
+    const [titles, setTitle] = useState(props.list.name);
+
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    let configToken=null;
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
 
     function addCard(card) {
        let newCards = [...props.list.cards, card];
@@ -47,7 +54,7 @@ export default function List(props) {
         updatedCards.map(card => {
             if (card.dndIndex > props.list.cards.filter(card=>card.id==id)[0].dndIndex) {
               card.dndIndex--;
-              axios.put(cardsUrl + card.id, card).then((result) => { console.log('result' + result) });
+              axios.put(cardsUrl + card.id, card,configToken).then((result) => { console.log('result' + result) });
             }
           })
 
@@ -116,7 +123,7 @@ export default function List(props) {
         {
             alert("proslo");
             let updatedLists=props.lists.filter(list=>list.id!==id);
-            axios.delete(listsUrl+id).then(response => {console.log(response.data.id); props.setList(updatedLists);});
+            axios.delete(listsUrl+id,configToken).then(response => {console.log(response.data.id); props.setList(updatedLists);});
            
         }
     }

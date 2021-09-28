@@ -36,6 +36,12 @@ export default function InputCard(props){
     const classes=useStyle();
     const [cardDescription,setCardDescription]=useState('');
     const [listTitle,setListTitle]=useState('');
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    let configToken=null;
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
 
  //   const karta={description: cardDescription,idList:listId};
 
@@ -54,7 +60,7 @@ export default function InputCard(props){
         
         var list={id:-1,name:listTitle,idBoard:localStorage.getItem("boardId"),cards:[]}; //OVOOOOOO PREPRAVITI KAD DODJU TABLE
         var newLists=[];
-        axios.post(listsUrl,list)
+        axios.post(listsUrl,list,configToken)
         .then(response => {console.log(response.data.id);props.setList([...props.lists,response.data])});
    //     newLists=[...props.lists,list];
 //    props.setList(newLists); 
@@ -66,7 +72,7 @@ export default function InputCard(props){
     console.log(props);
     let card={description: cardDescription,idList:props.listId,dndIndex:props.list.cards.length};//dndIndex:props.list.card.length
     console.log(props.listId);
-    axios.post(cardsUrl,card)
+    axios.post(cardsUrl,card,configToken)
         .then(response => {console.log(response);props.addCard(response.data)});
         setCardDescription(""); 
         props.setOpen(false);

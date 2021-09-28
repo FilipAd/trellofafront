@@ -35,6 +35,12 @@ export default function Title(props)
     const classes=useStyle();
     const [open,setOpen]= useState(false);
     const [pomTitle,setPomTitle]=useState(props.title);
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    let configToken=null;
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
 
     function handleOnChange(e) 
     {
@@ -46,7 +52,7 @@ export default function Title(props)
     function handleEdit()
     {
     const updatedList={idList:props.listId,idBoard:props.idBoard,name:pomTitle};
-    axios.put(listsUrl+props.listId,updatedList)
+    axios.put(listsUrl+props.listId,updatedList,configToken)
        .then(response => console.log(response));
        props.setTitle(pomTitle);
        setPomTitle("");

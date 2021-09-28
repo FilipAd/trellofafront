@@ -28,10 +28,16 @@ export default function Card(props)
 
     const classes=useStyle();
     const [open,setOpen]=useState(false);
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    let configToken=null;
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
 
     function handleDelete(id)
     {
-    axios.delete(cardsUrl+id)
+    axios.delete(cardsUrl+id,configToken)
        .then(response => console.log(response));
        props.deleteCard(id);
     }

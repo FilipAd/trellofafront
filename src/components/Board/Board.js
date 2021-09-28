@@ -64,6 +64,13 @@ export default function Board(props)
     const [open,setOpen]=useState(false);
     const [boardTitle,setBoardTitle]=useState(props.board.name);
 
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    let configToken=null;
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
+
     function handleOnChange(e) 
     {
         
@@ -74,7 +81,7 @@ export default function Board(props)
     {
       
         let updatedBoards=props.boards.filter(board=>board.id!==id);
-        axios.delete(boardsUrl+id).then(props.setBoard(updatedBoards)).catch(err=>{alert("Error")});
+        axios.delete(boardsUrl+id,configToken).then(props.setBoard(updatedBoards)).catch(err=>{alert("Error")});
         
     }
 
@@ -89,7 +96,7 @@ export default function Board(props)
     {
         let updatedBoard={id:boardId,name:boardTitle,idOrganization:1};
         let newBoards=[];
-        axios.put(boardsUrl+boardId,updatedBoard).then(res=>{
+        axios.put(boardsUrl+boardId,updatedBoard,configToken).then(res=>{
             for(let i=0;i<props.boards.length;i++)
             {
                 if(props.boards[i].id==boardId)

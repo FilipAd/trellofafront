@@ -35,6 +35,13 @@ export default function EditCard(props){
     const classes=useStyle();
     const [cardDescription,setCardDescription]=useState(props.description);
 
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    let configToken=null;
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
+
  //   const karta={description: cardDescription,idList:listId};
 
 
@@ -46,7 +53,7 @@ export default function EditCard(props){
     const handleBtnConfirm=() =>
     {
     const karta={description: cardDescription,idList:props.listId,id:props.cardId};
-     axios.put(cardsUrl+props.cardId,karta)
+     axios.put(cardsUrl+props.cardId,karta,configToken)
         .then(response =>{console.log(response);props.editCard(response.data)});
        props.setOpen(true);  
     };

@@ -54,16 +54,16 @@ export default function RouteList(props) {
     sourceClone.map(card => {
       if (card.dndIndex > removed.dndIndex) {
         card.dndIndex--;
-        axios.put(cardsUrl + card.id, card).then((result) => { console.log('result' + result) });
+        axios.put(cardsUrl + card.id, card,configToken).then((result) => { console.log('result' + result) });
       }
     })
     removed.dndIndex = droppableDestination.index;
-    axios.put(cardsUrl + removed.id, removed).then((result) => { console.log('result' + result) });
+    axios.put(cardsUrl + removed.id, removed,configToken).then((result) => { console.log('result' + result) });
     destClone.map(card => {
       console.log('destination: ' + card.dndIndex + ' > ' + removed.dndIndex);
       if (card.dndIndex >= removed.dndIndex) {
         card.dndIndex++;
-        axios.put(cardsUrl + card.id, card).then((result) => { console.log('result' + result) });
+        axios.put(cardsUrl + card.id, card,configToken).then((result) => { console.log('result' + result) });
       }
     })
     destClone.splice(droppableDestination.index, 0, removed);
