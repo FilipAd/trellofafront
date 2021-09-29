@@ -66,7 +66,7 @@ export default function Card(props)
             </Paper>
             </Collapse>
             <Collapse in={open}>
-            <EditCard setOpen={setOpen} description={props.card.description} cardId={props.card.id} listId={props.listId} editCard={props.editCard} />
+            <EditCard setOpen={setOpen} description={props.card.description} cardId={props.card.id} listId={props.listId} editCard={props.editCard} cardIndexDND={props.card.dndIndex} />
             </Collapse>
         </div>
     );

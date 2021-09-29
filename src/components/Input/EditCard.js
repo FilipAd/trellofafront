@@ -52,7 +52,7 @@ export default function EditCard(props){
 
     const handleBtnConfirm=() =>
     {
-    const karta={description: cardDescription,idList:props.listId,id:props.cardId};
+    const karta={description: cardDescription,idList:props.listId,id:props.cardId,dndIndex:props.cardIndexDND};
      axios.put(cardsUrl+props.cardId,karta,configToken)
         .then(response =>{console.log(response);props.editCard(response.data)});
        props.setOpen(true);  
