@@ -115,16 +115,11 @@ export default function List(props) {
 
     function deleteList(id)
     {
-        if((props.list.cards).length!==0)
+        var answer=window.confirm("Delete List ?");
+        if(answer)
         {
-            alert("Obrisi te sve karte");
-        }
-        else
-        {
-            alert("proslo");
             let updatedLists=props.lists.filter(list=>list.id!==id);
             axios.delete(listsUrl+id,configToken).then(response => {console.log(response.data.id); props.setList(updatedLists);});
-           
         }
     }
 

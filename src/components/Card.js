@@ -37,9 +37,14 @@ export default function Card(props)
 
     function handleDelete(id)
     {
-    axios.delete(cardsUrl+id,configToken)
-       .then(response => console.log(response));
-       props.deleteCard(id);
+    var answer=window.confirm("Delete Card ?");
+        if(answer)
+        {
+        axios.delete(cardsUrl+id,configToken)
+        .then(response => console.log(response));
+        props.deleteCard(id);
+        }
+
     }
 
     function handlePom()

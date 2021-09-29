@@ -79,9 +79,12 @@ export default function Board(props)
 
     function handleDelete(id)
     {
-      
+        var answer=window.confirm("Delete Board ?");
+        if(answer)
+        {
         let updatedBoards=props.boards.filter(board=>board.id!==id);
         axios.delete(boardsUrl+id,configToken).then(props.setBoard(updatedBoards)).catch(err=>{alert("Error")});
+        }
         
     }
 
