@@ -4,7 +4,7 @@ import {makeStyles,fade} from "@material-ui/core/styles";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
-import {boardsUrl,listsUrlEnd} from "../../URLs";
+import {boardsUrl,listsUrlEnd,boardsUrlEnd} from "../../URLs";
 import ClearIcon from '@material-ui/icons/Clear';
 import CheckIcon from '@material-ui/icons/Check';
 import { BrowserRouter as Router, Link } from "react-router-dom";
@@ -17,6 +17,7 @@ const useStyle = makeStyles((theme) =>({
     root:
     {
         align:"center",
+        
     },
     board: {
     /*    display:"flex",
@@ -33,8 +34,8 @@ const useStyle = makeStyles((theme) =>({
         color:"white",
         fontSize:"20px",
         multiline:"true",
+        overflow:"hidden",
         width : '40%',
-        height:'55%',
         background:"#467e83",
         borderRadius:"30px",
         padding:theme.spacing(1,1,1,2),
@@ -43,9 +44,10 @@ const useStyle = makeStyles((theme) =>({
     },
     link:
     {
-        
+        multiline: "true",
         fontSize:"25px",
         color:"#e4eced",
+        width:"40%",
         borderRadius:"20px",
         "&:hover":{
             background:fade("#79a1a5",0.75),
@@ -123,7 +125,7 @@ export default function Board(props)
         <div className={classes.root}>
             <Collapse in={!open}>  
             <Paper className={classes.board}>
-            <Link className={classes.link} to={listsUrlEnd} onMouseDown={()=>localStorage.setItem("boardId",props.board.id)}> {props.board.name} </Link>
+            <Link className={classes.link} to={boardsUrlEnd+props.board.id+listsUrlEnd} onMouseDown={()=>{localStorage.setItem("boardId",props.board.id);props.setBoardId(props.board.id)}}> {props.board.name} </Link>
             <div className={classes.button}>
             <IconButton className={classes.button}  onMouseDown={()=>openEditForm(props.board.id)}>
                 <EditIcon/>
@@ -139,11 +141,16 @@ export default function Board(props)
             <Paper className={classes.board}> 
             <InputBase
             onKeyDown={(e)=>{ 
-                 if(e.key=="Enter")
-                    {   
-                        e.preventDefault();
-                        alert("Potvrda");
-                    }
+                if(e.key=="Enter")
+                {   
+                    e.preventDefault();
+                    confirmEdit(props.board.id);  
+                } 
+                else if(e.key=="Escape")
+                {
+                    e.preventDefault();
+                    setOpen(!open);
+                }
             }}
             onChange={handleOnChange}
             multiline 

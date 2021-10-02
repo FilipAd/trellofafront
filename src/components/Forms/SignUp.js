@@ -4,7 +4,7 @@ import {makeStyles,fade} from "@material-ui/core/styles";
 import {Button,FormLabel,FormGroup} from "@material-ui/core"
 import "./Universal.css";
 import axios from "axios";
-import {signUpUrl,loginEnd} from "../../URLs";
+import {signUpFrontUrl,loginEnd,signUpUrl} from "../../URLs";
 import { Redirect,Link} from "react-router-dom";
 import Background from "../../background6.jpg"
 
@@ -82,6 +82,10 @@ export default function SignUp()
         backgroundImage:`URL(${Background})`,
         width:"100%",
         height:"100vh",
+        backgroundPosition:"center",
+        backgroundRepeat:"no-repeat",
+        backgroundSize:"cover",
+        overflowX: "scroll",
       },
       title:{
         margineLeft:"100px",
@@ -103,8 +107,7 @@ export default function SignUp()
       },
       createInput : {
         margine:"10 10 10 10",
-        width: "400px",
-        height: "30px",
+       width: "400px",
         fontSize: "22px",
         padding: "10px",
         boxSizing: "borderBox",

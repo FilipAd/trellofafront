@@ -1,12 +1,13 @@
 import React, {useState} from "react";
-import {InputBase,Button} from "@material-ui/core";
+import {InputBase,Button,IconButton,Badge} from "@material-ui/core";
 import {makeStyles,fade} from "@material-ui/core/styles";
 import Board from "./Board";
 import axios from "axios";
-import {boardsUrl,loginEnd,membersUrl,boardsByMemberEnd,boardHasMembersUrl} from "../../URLs";
+import {boardsUrl,loginEnd,membersUrl,boardsByMemberEnd,boardHasMembersUrl,invitationsEnd} from "../../URLs";
 import Background from "../../background6.jpg";
 import Login from "../Forms/Login";
-import { Redirect } from "react-router";
+import { Redirect,Link } from "react-router-dom";
+import MailOutline from "@material-ui/icons/MailOutline";
 
 
 
@@ -15,8 +16,8 @@ const useStyle = makeStyles((theme) =>({
 
  createInput : {
     width: "400px",
-    height: "40px",
     fontSize: "22px",
+    background:"#f0f0f0",
     padding: "10px",
     boxSizing: "borderBox",
     borderRadius: "3px",
@@ -52,6 +53,10 @@ const useStyle = makeStyles((theme) =>({
     },
     logout:{
         align:"right",
+    },
+    message:
+    {
+        margin:theme.spacing(0,5,0,0),
     },
     btnConfirm:{
         background:"#286ad4 ",
@@ -97,7 +102,6 @@ export default function RouteBoard(props)
 
     function handleCreateBoard()
     {
-        console.log("usli smo u funkciju")
         setBoardTitle(boardTitle)
         let updatedBoards=[]
         let newBoard={name:boardTitle,id:-1,idOrganization:1}
@@ -123,6 +127,8 @@ export default function RouteBoard(props)
     }
 
 
+
+
   
 
     return(
@@ -132,6 +138,15 @@ export default function RouteBoard(props)
             CREATE NEW BOARD:
         </div>
         <div align="right">
+        <Link to={invitationsEnd}>
+        <IconButton className={classes.message}>
+            <Badge  badgeContent={"nesto"} color="secondary">
+            
+            <MailOutline fontSize="large"/>
+            
+            </Badge>
+        </IconButton>
+        </Link>
         <Button className={classes.btnConfirm} onMouseDown={()=>handleLogout()}>LOGOUT</Button>
         </div>
         

@@ -5,8 +5,9 @@ import {Button,FormLabel,FormGroup} from "@material-ui/core"
 import "./Universal.css";
 import Background from "../../background6.jpg"
 import axios from "axios";
-import {loginUrl,boardsUrlEnd} from "../../URLs";
-import { Redirect } from "react-router";
+import {loginUrl,boardsUrlEnd, signUpEnd, signUpFrontUrl} from "../../URLs";
+//import { Redirect,Link } from "react-router";
+import { Redirect,Link} from "react-router-dom";
 
 
 export default function Login(props) {
@@ -65,6 +66,10 @@ export default function Login(props) {
         backgroundImage:`URL(${Background})`,
         width:"100%",
         height:"100vh",
+        backgroundPosition:"center",
+        backgroundRepeat:"no-repeat",
+        backgroundSize:"cover",
+        overflowX: "scroll",
       },
       label:
       {
@@ -83,10 +88,20 @@ export default function Login(props) {
         paddingLeft: "150px",
         textShadow: "2px 0 0 #d2d9db, -2px 0 0 #d2d9db, 0 2px 0 #d2d9db, 0 -2px 0 #d2d9db, 1px 1px #d2d9db, -1px -1px 0 #d2d9db, 1px -1px 0 #d2d9db, -1px 1px 0 #d2d9db",
       },
+
+      link:{
+        color:"yellow",
+        margineLeft:"100px",
+        fontSize:"21px",
+        paddingLeft:"10px",
+        textShadow: "0 0 5px black",
+        "&:hover":{
+          color:"#3345ff"
+      },
+      },
       createInput : {
         margine:"10 10 10 10",
         width: "400px",
-        height: "30px",
         fontSize: "22px",
         padding: "10px",
         boxSizing: "borderBox",
@@ -96,6 +111,7 @@ export default function Login(props) {
         boxShadow: "0 2px 4px grey",
         alignSelf: "center",
         },
+        
    }))
    const classes=useStyle();
 
@@ -129,6 +145,7 @@ export default function Login(props) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </FormGroup>
+        <Link to={signUpFrontUrl} className={classes.link}>Create account</Link>
         <Button block size="lg" type="submit" disabled={!validateForm()} className={classes.button} >
           Login
         </Button>

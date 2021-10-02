@@ -2,11 +2,14 @@ import List from "./List";
 import styled from "styled-components";
 import React, { useState,} from "react";
 import axios from 'axios';
-import { cardsUrl,boardsUrl,listsUrlEnd } from "../../URLs";
+import { cardsUrl,boardsUrl,listsUrlEnd, boardsUrlEnd, loginEnd } from "../../URLs";
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {makeStyles,fade} from "@material-ui/core/styles";
 import Background from "../../background6.jpg"
+import {Button} from "@material-ui/core";
+import { Redirect,Link } from "react-router-dom";
+import InviteDialog from "../InviteDialog";
 
 
 const ListContainer = styled.div
@@ -21,7 +24,29 @@ const useStyle = makeStyles((theme) =>({
   width:"100%",
   height:"100vh",
   backgroundImage:`URL(${Background})`,
-  }
+  backgroundPosition:"center",
+  backgroundRepeat:"no-repeat",
+  backgroundSize:"cover",
+  //overflowX: "scroll",
+  },
+  line:
+  {
+    background:"#0c5faa",
+    height:"50px",
+    textAlign:"right",
+    width:"100%",
+    
+  },
+  button:{
+    align:"left",
+    margin:theme.spacing(1,1,1,1),
+  background:"#f2f98d",
+  color:"black",
+    "&:hover":{
+      background:fade("#b9ebea",0.75),
+      color:"white",
+    }
+},
 
 }))
 
@@ -30,13 +55,24 @@ const useStyle = makeStyles((theme) =>({
 export default function RouteList(props) {
   const classes=useStyle();
   const [lists, setList] = useState([]);
+  const [redirectToLogin,setRedirectToLogin]=useState(false);
+  const [redirectToBoards,setRedirectToBoards]=useState(false);
+  const[openDialog,setOpenDialog]=useState(false);
+
+  function handleLogout()
+    {
+        localStorage.removeItem("user");
+        setRedirectToLogin(true);
+    }
+
+
   let configToken=null;
   let userFromStorage=JSON.parse(localStorage.getItem("user"));
     if(userFromStorage!==null)
     {
     configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
     }
-  React.useEffect(() => { axios.get(boardsUrl+localStorage.getItem("boardId")+listsUrlEnd,configToken).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
+  React.useEffect(() => { axios.get(boardsUrl+props.boardId+listsUrlEnd,configToken).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
 
   if (!lists) return null;
 
@@ -95,10 +131,10 @@ export default function RouteList(props) {
   const onDragEnd = (result) => {
     // useEffect posalji newLists bazi
     const { source, destination } = result;
-    console.log("vuuuuuuc");
+   // console.log("vuuuuuuc");
     // dropped outside the list
     if (!destination) {
-      console.log("nece ona nidje");
+  //    console.log("nece ona nidje");
       return;
     }
     let change = move(
@@ -115,8 +151,26 @@ export default function RouteList(props) {
     setList(newLists);
   };
 
+  if(redirectToBoards)
+  {
+    return <Redirect to={boardsUrlEnd} />
+  }
+
+  if(redirectToLogin)
+  {
+    return <Redirect to={loginEnd}/>
+  }
+ 
   return (
     <div className={classes.root}>
+      <div className={classes.line}>
+        <Button className={classes.button} onMouseDown={()=>setOpenDialog(true)} >Invite</Button>
+        <Link to={boardsUrlEnd}>
+        <Button className={classes.button}>Back to boards</Button>
+        </Link>
+        <Button className={classes.button} onMouseDown={()=>handleLogout()}>Logout</Button>
+        <InviteDialog open={openDialog} setOpenDialog={setOpenDialog}/>
+      </div>
     <DragDropContext onDragEnd={onDragEnd}>
       <ListContainer>
         {

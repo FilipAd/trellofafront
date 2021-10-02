@@ -16,7 +16,14 @@ export const boardsByMemberEnd="/boardsbymember/";
 
 export const membersEnd="/members/";
 
-export const boardHasMembersEnd="/boardhasmembers/"
+export const boardHasMembersEnd="/boardhasmembers/";
+
+export const signUpFrontUrl="/signup/";
+
+export const invitationsEnd="/invitations/";
+
+
+
 
 
 
@@ -33,3 +40,8 @@ export const membersUrl=baseUrl+membersEnd;
 export const signUpUrl=baseUrl+signUpEnd;
 
 export const loginUrl=baseUrl+loginEnd;
+
+export const invitationUrl=baseUrl+invitationsEnd;
+
+export const membersByUsernameUrl=baseUrl+membersEnd+"byusername/";
+

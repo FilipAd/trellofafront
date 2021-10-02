@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import {Typography,InputBase} from "@material-ui/core";
+import {Typography,InputBase,IconButton} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import EditIcon from '@material-ui/icons/Edit';
 import {listsUrl} from "../../URLs";
 import axios from "axios";
+import ClearIcon from '@material-ui/icons/Clear';
+import CheckIcon from '@material-ui/icons/Check';
 
 
 const useStyle = makeStyles((theme) =>({
@@ -16,12 +18,15 @@ const useStyle = makeStyles((theme) =>({
         flexGrow:1,
         fontSize:"1.2rem",
         fontWeight:"bold",
+        overflow:"hidden",
+
     },
     editableTitleContainer:{
         marginLeft: theme.spacing(1),
-        display: "flex",
+        overflow:"hidden",
         fontSize:"1.2rem",
         fontWeight:"bold",
+        overflow:"hidden",
     },
     input:{
         margin:theme.spacing(1),
@@ -55,7 +60,6 @@ export default function Title(props)
     axios.put(listsUrl+props.listId,updatedList,configToken)
        .then(response => console.log(response));
        props.setTitle(pomTitle);
-       setPomTitle("");
        setOpen(!open);
     }
 
@@ -70,18 +74,41 @@ export default function Title(props)
                 className:classes.input
                 }}
                 fullWidth
-                onBlur={handleEdit}
                 onChange={handleOnChange}
+                onKeyDown={(e)=>{ 
+                if(e.key=="Enter")
+                {   
+                    e.preventDefault();
+                    handleEdit();  
+                } 
+                else if(e.key=="Escape")
+                {
+                    e.preventDefault();
+                    setOpen(!open);
+                }
+            }}
+
                 />
+                <div>
+                <IconButton onMouseDown={()=>handleEdit()}>
+                <CheckIcon/>
+                </IconButton>
+                <IconButton onMouseDown={()=>setOpen(!open)}>
+                <ClearIcon/>
+                </IconButton>
+        
+                </div>
             </div>
             ):(
             <div className={classes.editableTitleContainer}>
-            <Typography onClick={()=>setOpen(!open)} className={classes.editableTitle}>{props.title}</Typography>
-            <MoreHorizIcon/>
+           <IconButton  onClick={()=>setOpen(!open)}>
+                    <EditIcon/>
+            </IconButton>
+            <Typography className={classes.editableTitle}>{props.title}</Typography>
+            
             </div> 
             )
-        }
-            
+        }  
             
         </div>
     );
