@@ -3,7 +3,7 @@ import {InputBase,Button,IconButton,Badge} from "@material-ui/core";
 import {makeStyles,fade} from "@material-ui/core/styles";
 import Board from "./Board";
 import axios from "axios";
-import {boardsUrl,loginEnd,membersUrl,boardsByMemberEnd,boardHasMembersUrl,invitationsEnd} from "../../URLs";
+import {boardsUrl,loginEnd,membersUrl,boardsByMemberEnd,boardHasMembersUrl,invitationsEnd, labelsUrl, invitationUrl} from "../../URLs";
 import Background from "../../background6.jpg";
 import Login from "../Forms/Login";
 import { Redirect,Link } from "react-router-dom";
@@ -77,7 +77,8 @@ export default function RouteBoard(props)
   const [boards,setBoard]=useState(null);
   const [boardTitle,setBoardTitle]=useState("");
   const [redirectToLogin,setRedirectToLogin]=useState(false);
- 
+  let [numberOfInvitations,setNumberOfInvitations]=useState(0);
+  let [showBadge,setShowBadge]=useState(true);
   let userFromStorage=JSON.parse(localStorage.getItem("user"));
   let configToken=null;
   let userFromStorageId=null;
@@ -88,8 +89,16 @@ export default function RouteBoard(props)
   }
  
  
-
-
+  function chekInvitations()
+  {
+      console.log("check");
+      if(numberOfInvitations>0)
+          setShowBadge(false)
+      else
+          setShowBadge(true)
+      
+  }
+  
     function handleOnChange(e) 
     {
         setBoardTitle(e.target.value);
@@ -117,6 +126,9 @@ export default function RouteBoard(props)
     
    
     React.useEffect(()=>{axios.get(membersUrl+userFromStorageId+boardsByMemberEnd,configToken).then(res=>{setBoard(res.data);console.log(res.data)});},[]);
+    React.useEffect(()=>{axios.get(invitationUrl+JSON.parse(localStorage.getItem("user")).id,configToken).then(res=>{setNumberOfInvitations(res.data.length);console.log(res.data);chekInvitations()});},[]);
+
+ 
 
     if(!boards) return null;
 
@@ -140,7 +152,7 @@ export default function RouteBoard(props)
         <div align="right">
         <Link to={invitationsEnd}>
         <IconButton className={classes.message}>
-            <Badge  badgeContent={"nesto"} color="secondary">
+            <Badge  badgeContent={numberOfInvitations} color="secondary" invisible={showBadge}>
             
             <MailOutline fontSize="large"/>
             

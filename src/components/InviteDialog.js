@@ -40,6 +40,12 @@ export default function InviteDialog(props) {
       }
 
   }
+
+  function cancle()
+  {
+    setResult([]);
+    props.setOpenDialog(false);
+  }
   return (
     <div>
       <Dialog open={props.open}>
@@ -52,20 +58,35 @@ export default function InviteDialog(props) {
             autoFocus
             margin="dense"
             id="name"
+            autoComplete="off"
             label="Username"
             type="username"
             fullWidth
             variant="standard"
             onChange={handleOnChange}
+            onKeyDown={(e)=>{ 
+              if(e.key=="Enter")
+              {   
+                  e.preventDefault();
+                  find(pattern);  
+              } 
+              else if(e.key=="Escape")
+              {
+                  e.preventDefault();
+                  cancle();
+              }
+          }}
           />
           <DialogActions>
-          <Button onClick={()=>props.setOpenDialog(false)}>Cancel</Button>
+          <Button onClick={()=>cancle()}>Cancel</Button>
           <Button onClick={()=>find(pattern)}>Find</Button>
         </DialogActions>
           <div>Search results:</div>
+          <div>
         {
             result.map((res)=>{ return <InviteSearchResult searchRes={res}/>})
         }
+        </div>
         </DialogContent>
         
       </Dialog>

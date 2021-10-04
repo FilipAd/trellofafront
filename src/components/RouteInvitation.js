@@ -4,7 +4,7 @@ import {makeStyles,fade} from "@material-ui/core/styles";
 import Background from "../background6.jpg";
 import { Redirect } from "react-router";
 import Invitation from "./Invitation";
-import { boardHasMembersUrl, invitationUrl } from "../URLs";
+import { boardHasMembersUrl, invitationUrl, loginEnd } from "../URLs";
 import axios from "axios";
 
 
@@ -42,6 +42,7 @@ export default function Invitations(props)
 {
 
     const[invite,setInvite]=useState([]);
+    const[redirectToLogin,setRedirectToLogin]=useState(false);
     React.useEffect(()=>{axios.get(invitationUrl+JSON.parse(localStorage.getItem("user")).id).then(res=>{setInvite(res.data);console.log("EVO IDE:"+res.data)});},[]);
 
     function deleteInvitation(invitation) {
@@ -64,11 +65,24 @@ export default function Invitations(props)
         
         deleteInvitation(invitation);
     }
+
+    function handleLogout()
+    {
+        localStorage.removeItem("user");
+        setRedirectToLogin(true);
+    }
+
     const classes=useStyle();
+
+    if(redirectToLogin)
+    {
+    return <Redirect to={loginEnd}/>
+    }
+ 
     return(
     <div className={classes.root}>
         <div align="right">
-        <Button className={classes.btnConfirm}>LOGOUT</Button>
+        <Button className={classes.btnConfirm} onMouseDown={()=>handleLogout()}>LOGOUT</Button>
         </div>
         <div align="center">
          <div className={classes.title}>

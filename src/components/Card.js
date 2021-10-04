@@ -5,8 +5,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import axios from "axios";
 import EditCard from "./Input/EditCard";
-import {cardsUrl} from "../URLs";
+import {cardHasLabelsByCardIdUrl, cardhaslabelsUrl, cardsUrl, labelsEnd, labelsUrl} from "../URLs";
 import Label from "./Label";
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import { Tooltip } from "react-bootstrap";
+import AddLabelDialog from "./AddLabelDialog";
 
 
 
@@ -15,7 +18,13 @@ const useStyle = makeStyles((theme) =>({
     card:{
         padding:theme.spacing(1,1,1,2),
         margin:theme.spacing(1),
-    } 
+        overflow:"hidden",
+    }, 
+    icons:
+    {
+        height:"40px",
+        width:"40px"
+    }
 }))
 
 
@@ -29,6 +38,15 @@ export default function Card(props)
 
     const classes=useStyle();
     const [open,setOpen]=useState(false);
+    const [openDialog,setOpenDialog]=useState(false);
+    const [labels,setLabels]=useState([]);
+    let [labelThumnail,setLabelThumbnail]=useState([]);
+    let [cardHasLabelsByCardId,setCardHasLabelsByCardId]=useState([]);
+
+    React.useEffect(() => { axios.get(labelsUrl).then(res => {setLabelThumbnail(res.data); console.log(res.data)}); }, []);
+    React.useEffect(() => { axios.get(cardHasLabelsByCardIdUrl+props.card.id).then(res => {setCardHasLabelsByCardId(res.data); console.log(res.data)}); }, []);
+    React.useEffect(() => { axios.get(cardsUrl+props.card.id+labelsEnd).then(res => {setLabels(res.data); console.log(res.data)}); }, []);
+    
     let userFromStorage=JSON.parse(localStorage.getItem("user"));
     let configToken=null;
     if(userFromStorage!==null)
@@ -48,21 +66,60 @@ export default function Card(props)
 
     }
 
-    function handlePom()
-    {}
+    function addLabel(reqLabel)
+    {
+        axios.post(labelsUrl,reqLabel).then(res=>{alert("successful");setLabelThumbnail([...labelThumnail,res.data])}).catch(err=>alert("error"));
+
+    }
+
+    function updateLabels(lab,action)
+    {
+        if(action===1)
+        setLabels([...labels,lab]);
+        else if(action===2)
+        setLabels(labels.filter(l=>l.id!==lab.id));
+        
+    }
+
+   
+   
 
     return(
         <div>
+            <AddLabelDialog open={openDialog} setOpenDialog={setOpenDialog} cardId={props.card.id} addLabel={addLabel} setLabelThumbnail={setLabels} 
+            labelThumnail={labelThumnail} setCardHasLabelsByCardId={setCardHasLabelsByCardId} cardHasLabelsByCardId={cardHasLabelsByCardId}
+            updateLabels={updateLabels}/>
             <Collapse in={!open}>
             <Paper className={classes.card}>
             {props.card.description}
             <div>
-            <IconButton  onMouseDown={()=>setOpen(!open)}>
+            
+            
+            <IconButton  onMouseDown={()=>setOpen(!open)} className={classes.icons}>
+            <Tooltip title="Edit Card">
                 <EditIcon/>
+            </Tooltip>
             </IconButton>
-            <IconButton onMouseDown={()=>handleDelete(props.card.id)}>
+            
+            
+            <IconButton onMouseDown={()=>handleDelete(props.card.id)} className={classes.icons}>
+            <Tooltip title="Delete Card">
                 <DeleteIcon/>
+            </Tooltip>
             </IconButton>
+           
+            
+            <IconButton onMouseDown={()=>setOpenDialog(true)} className={classes.icons}>
+            <Tooltip title="Add Label">
+                <AddBoxIcon/>
+            </Tooltip>
+            </IconButton>
+           
+            <div>
+                {
+                   labels.map((lab)=>(<Label color={lab.color}/>))
+                }
+            </div>
             </div>
             </Paper>
             </Collapse>

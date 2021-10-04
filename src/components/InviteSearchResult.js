@@ -44,10 +44,11 @@ function sendInvitation(idReceiver)
 export default function InviteSearchResult(props)
 {
     const classes=useStyle();
+    const [buttonDisabled,setButtonDisabled]=useState(false);
     return(<div>
     <Paper className={classes.board}>
         <div> {props.searchRes.username}
-        <Button className={classes.buttonYes} onMouseDown={()=>sendInvitation(props.searchRes.id)}>SEND</Button> </div>   
+        <Button className={classes.buttonYes} onMouseDown={()=>{sendInvitation(props.searchRes.id);setButtonDisabled(true)}} disabled={buttonDisabled}>SEND</Button> </div>   
         </Paper>
     </div>
     );

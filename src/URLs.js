@@ -22,6 +22,13 @@ export const signUpFrontUrl="/signup/";
 
 export const invitationsEnd="/invitations/";
 
+export const labelsEnd="/labels/";
+
+export const cardHasLabelsEnd="/cardhaslabels/";
+
+export const cardHasLabelsByCardIdEnd="bycardid/";
+
+export const deleteEnd="delete/";
 
 
 
@@ -29,7 +36,11 @@ export const invitationsEnd="/invitations/";
 
 export const boardsUrl=baseUrl+boardsUrlEnd;
 
+export const cardHasLabelsByCardIdUrl=baseUrl+cardHasLabelsEnd+cardHasLabelsByCardIdEnd;
+
 export const boardHasMembersUrl=baseUrl+boardHasMembersEnd;
+
+export const cardhaslabelsUrl=baseUrl+cardHasLabelsEnd;
 
 export const listsUrl=baseUrl+listsUrlEnd;
 
@@ -42,6 +53,8 @@ export const signUpUrl=baseUrl+signUpEnd;
 export const loginUrl=baseUrl+loginEnd;
 
 export const invitationUrl=baseUrl+invitationsEnd;
+
+export const labelsUrl=baseUrl+labelsEnd;
 
 export const membersByUsernameUrl=baseUrl+membersEnd+"byusername/";
 

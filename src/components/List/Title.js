@@ -101,10 +101,12 @@ export default function Title(props)
             </div>
             ):(
             <div className={classes.editableTitleContainer}>
-           <IconButton  onClick={()=>setOpen(!open)}>
+           
+            <Typography className={classes.editableTitle}>{props.title}
+            <IconButton  onClick={()=>setOpen(!open)}>
                     <EditIcon/>
-            </IconButton>
-            <Typography className={classes.editableTitle}>{props.title}</Typography>
+            </IconButton></Typography>
+            
             
             </div> 
             )
