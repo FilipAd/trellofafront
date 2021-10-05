@@ -1,5 +1,6 @@
 //import * as React from 'react';
 import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {Button,TextField,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle} from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import {Paper} from "@material-ui/core"
@@ -7,10 +8,18 @@ import InviteSearchResult from "./InviteSearchResult";
 import axios from "axios";
 import { membersByUsernameUrl } from "../URLs";
 
-
+const useStyle = makeStyles((theme) => ({
+  result: {
+      width: '100%',
+      background: "#a7c2ee",
+      marginLeft: theme.spacing(1),
+      marginTop: theme.spacing(1),
+  },
+}))
 
 
 export default function InviteDialog(props) {
+  const classes = useStyle();
   const [open, setOpen] = useState(false);
     let [result,setResult]=useState([]);
     const [pattern,setPattern]=useState(null);
@@ -32,7 +41,6 @@ export default function InviteDialog(props) {
   function find(patern)
   {
       if(pattern.match(/^[a-zA-Z0-9_]+$/)) {
-      console.log("EVOOOOOOOO LINKA:"+membersByUsernameUrl+patern);
       axios.get(membersByUsernameUrl+patern).then(res=>{console.log(res.data);setResult(res.data)}).catch(err=>{console.log(err);alert("Error")});
       console.log(result);}
       else {
@@ -82,10 +90,10 @@ export default function InviteDialog(props) {
           <Button onClick={()=>find(pattern)}>Find</Button>
         </DialogActions>
           <div>Search results:</div>
-          <div>
-        {
-            result.map((res)=>{ return <InviteSearchResult searchRes={res}/>})
-        }
+          <div >
+          {  
+            result.map((res)=>{ return <InviteSearchResult searchRes={res}/> })
+          }
         </div>
         </DialogContent>
         

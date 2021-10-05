@@ -6,8 +6,9 @@ import Card from "../Card";
 import InputContainer from "../Input/InputContainer";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import {listsUrl, cardsUrl} from "../../URLs";
+import {listsUrl, cardsUrl, labelsUrl} from "../../URLs";
 import axios from "axios";
+
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -23,6 +24,7 @@ export default function List(props) {
     const [cards, setCards] = useState(props.list.cards);
     const [titles, setTitle] = useState(props.list.name);
 
+ 
     let userFromStorage=JSON.parse(localStorage.getItem("user"));
     let configToken=null;
     if(userFromStorage!==null)
@@ -142,7 +144,8 @@ export default function List(props) {
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}>
-                                            <Card key={card.id} card={card} deleteCard={deleteCard} editCard={editCard} listId={props.list.id} />
+                                            <Card key={card.id} card={card} deleteCard={deleteCard} editCard={editCard} listId={props.list.id}
+                                            labelThumnail={props.labelThumnail} setLabelThumbnail={props.setLabelThumbnail} />
                                         </div>
                                     )}
                                 </Draggable>

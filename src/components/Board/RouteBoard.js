@@ -77,7 +77,7 @@ export default function RouteBoard(props)
   const [boards,setBoard]=useState(null);
   const [boardTitle,setBoardTitle]=useState("");
   const [redirectToLogin,setRedirectToLogin]=useState(false);
-  let [numberOfInvitations,setNumberOfInvitations]=useState(0);
+  let [numberOfInvitations,setNumberOfInvitations]=useState([]);
   let [showBadge,setShowBadge]=useState(true);
   let userFromStorage=JSON.parse(localStorage.getItem("user"));
   let configToken=null;
@@ -89,14 +89,13 @@ export default function RouteBoard(props)
   }
  
  
-  function chekInvitations()
+  function checkInvitations()
   {
-      console.log("check");
+      console.log("check " +numberOfInvitations);
       if(numberOfInvitations>0)
-          setShowBadge(false)
+          return false;
       else
-          setShowBadge(true)
-      
+          return true ;  
   }
   
     function handleOnChange(e) 
@@ -126,7 +125,7 @@ export default function RouteBoard(props)
     
    
     React.useEffect(()=>{axios.get(membersUrl+userFromStorageId+boardsByMemberEnd,configToken).then(res=>{setBoard(res.data);console.log(res.data)});},[]);
-    React.useEffect(()=>{axios.get(invitationUrl+JSON.parse(localStorage.getItem("user")).id,configToken).then(res=>{setNumberOfInvitations(res.data.length);console.log(res.data);chekInvitations()});},[]);
+    React.useEffect(()=>{axios.get(invitationUrl+JSON.parse(localStorage.getItem("user")).id,configToken).then(res=>{setNumberOfInvitations(res.data.length);console.log(res.data)});},[]);
 
  
 
@@ -152,7 +151,7 @@ export default function RouteBoard(props)
         <div align="right">
         <Link to={invitationsEnd}>
         <IconButton className={classes.message}>
-            <Badge  badgeContent={numberOfInvitations} color="secondary" invisible={showBadge}>
+            <Badge  badgeContent={numberOfInvitations} color="secondary" invisible={checkInvitations()}>
             
             <MailOutline fontSize="large"/>
             

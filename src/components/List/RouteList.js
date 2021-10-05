@@ -2,7 +2,7 @@ import List from "./List";
 import styled from "styled-components";
 import React, { useState,} from "react";
 import axios from 'axios';
-import { cardsUrl,boardsUrl,listsUrlEnd, boardsUrlEnd, loginEnd } from "../../URLs";
+import { cardsUrl,boardsUrl,listsUrlEnd, boardsUrlEnd, loginEnd, labelsUrl, membersUrl, labelsEnd } from "../../URLs";
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {makeStyles,fade} from "@material-ui/core/styles";
@@ -27,20 +27,24 @@ const useStyle = makeStyles((theme) =>({
   backgroundPosition:"center",
   backgroundRepeat:"no-repeat",
   backgroundSize:"cover",
-  //overflowX: "scroll",
   },
   line:
   {
     background:"#0c5faa",
     height:"50px",
     textAlign:"right",
-    width:"100%",
-    
+    width:"100%", 
+  },
+  link:
+  {
+    textDecoration:"none"
   },
   button:{
+    textDecoration:"none",
     align:"left",
     margin:theme.spacing(1,1,1,1),
   background:"#f2f98d",
+
   color:"black",
     "&:hover":{
       background:fade("#b9ebea",0.75),
@@ -58,6 +62,8 @@ export default function RouteList(props) {
   const [redirectToLogin,setRedirectToLogin]=useState(false);
   const [redirectToBoards,setRedirectToBoards]=useState(false);
   const[openDialog,setOpenDialog]=useState(false);
+  let [labelThumnail,setLabelThumbnail]=useState([]);
+  React.useEffect(() => { axios.get(membersUrl+JSON.parse(localStorage.getItem("user")).id+labelsEnd).then(res => {setLabelThumbnail(res.data);}); }, []);
 
   function handleLogout()
     {
@@ -114,7 +120,6 @@ export default function RouteList(props) {
   const getList = id => {
     for (let i = 0; i < lists.length; i++) {
       let list = lists[i];
-      console.log(list.id);
       if (list.id == id)
         return list.cards;
     }
@@ -122,7 +127,6 @@ export default function RouteList(props) {
   const getListIndex = id => {
     for (let i = 0; i < lists.length; i++) {
       let list = lists[i];
-      console.log(list.id);
       if (list.id == id)
         return lists.indexOf(list);
     }
@@ -145,7 +149,6 @@ export default function RouteList(props) {
     );
     let newLists = JSON.parse(JSON.stringify(lists));
     // console.log(change[source.droppableId]);
-    console.log(change);
     newLists[getListIndex(source.droppableId)].cards = change[source.droppableId];
     newLists[getListIndex(destination.droppableId)].cards = change[destination.droppableId];
     setList(newLists);
@@ -165,7 +168,7 @@ export default function RouteList(props) {
     <div className={classes.root}>
       <div className={classes.line}>
         <Button className={classes.button} onMouseDown={()=>setOpenDialog(true)} >Invite</Button>
-        <Link to={boardsUrlEnd}>
+        <Link to={boardsUrlEnd} className={classes.link}>
         <Button className={classes.button}>Back to boards</Button>
         </Link>
         <Button className={classes.button} onMouseDown={()=>handleLogout()}>Logout</Button>
@@ -174,7 +177,7 @@ export default function RouteList(props) {
     <DragDropContext onDragEnd={onDragEnd}>
       <ListContainer>
         {
-          lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} setList={setList} lists={lists} />))
+          lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} setList={setList} lists={lists} labelThumnail={labelThumnail} setLabelThumbnail={setLabelThumbnail}/>))
         }
         <InputContainer type={"list"} setList={setList} lists={lists} />
       </ListContainer>

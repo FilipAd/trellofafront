@@ -51,14 +51,13 @@ export default function InviteDialog(props) {
 
   function handleAdd()
   {
-    let newLabel={color:labelColor,name:labelName};
+    let newLabel={color:labelColor,name:labelName,idMember:JSON.parse(localStorage.getItem("user")).id};
     props.addLabel(newLabel);
     
   }
 
   function checkFunction(lab)
   {
-    console.log("Izvrsi funckiju");
     for(let i=0;i<props.cardHasLabelsByCardId.length;i++)
     {
       if(lab.id===props.cardHasLabelsByCardId[i].idLabel)
@@ -90,7 +89,7 @@ export default function InviteDialog(props) {
         <DialogContent>
         <div>
          {
-           props.labelThumnail.map(lab=><LabelThumbnail name={lab.name} color={lab.color} lab={lab} check={checkFunction(lab)} cardId={props.cardId} 
+           props.labelThumnail.map(lab=><LabelThumbnail key={lab.id} name={lab.name} color={lab.color} lab={lab} check={checkFunction(lab)} cardId={props.cardId} 
            setCardHasLabelsByCardId={props.setCardHasLabelsByCardId} attachLabel={attachLabel} detachLabel={detachLabel}/>)
          }
          </div>

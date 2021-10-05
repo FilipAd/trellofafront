@@ -40,12 +40,12 @@ export default function Card(props)
     const [open,setOpen]=useState(false);
     const [openDialog,setOpenDialog]=useState(false);
     const [labels,setLabels]=useState([]);
-    let [labelThumnail,setLabelThumbnail]=useState([]);
+    
     let [cardHasLabelsByCardId,setCardHasLabelsByCardId]=useState([]);
 
-    React.useEffect(() => { axios.get(labelsUrl).then(res => {setLabelThumbnail(res.data); console.log(res.data)}); }, []);
-    React.useEffect(() => { axios.get(cardHasLabelsByCardIdUrl+props.card.id).then(res => {setCardHasLabelsByCardId(res.data); console.log(res.data)}); }, []);
-    React.useEffect(() => { axios.get(cardsUrl+props.card.id+labelsEnd).then(res => {setLabels(res.data); console.log(res.data)}); }, []);
+    
+    React.useEffect(() => { axios.get(cardHasLabelsByCardIdUrl+props.card.id).then(res => {setCardHasLabelsByCardId(res.data);}); }, []);
+    React.useEffect(() => { axios.get(cardsUrl+props.card.id+labelsEnd).then(res => {setLabels(res.data); }); }, []);
     
     let userFromStorage=JSON.parse(localStorage.getItem("user"));
     let configToken=null;
@@ -68,7 +68,7 @@ export default function Card(props)
 
     function addLabel(reqLabel)
     {
-        axios.post(labelsUrl,reqLabel).then(res=>{alert("successful");setLabelThumbnail([...labelThumnail,res.data])}).catch(err=>alert("error"));
+        axios.post(labelsUrl,reqLabel).then(res=>{alert("successful");props.setLabelThumbnail([...props.labelThumnail,res.data])}).catch(err=>alert("error"));
 
     }
 
@@ -86,8 +86,8 @@ export default function Card(props)
 
     return(
         <div>
-            <AddLabelDialog open={openDialog} setOpenDialog={setOpenDialog} cardId={props.card.id} addLabel={addLabel} setLabelThumbnail={setLabels} 
-            labelThumnail={labelThumnail} setCardHasLabelsByCardId={setCardHasLabelsByCardId} cardHasLabelsByCardId={cardHasLabelsByCardId}
+            <AddLabelDialog open={openDialog} setOpenDialog={setOpenDialog} cardId={props.card.id} addLabel={addLabel} setLabelThumbnail={props.setLabelThumbnail} 
+            labelThumnail={props.labelThumnail} setCardHasLabelsByCardId={setCardHasLabelsByCardId} cardHasLabelsByCardId={cardHasLabelsByCardId}
             updateLabels={updateLabels}/>
             <Collapse in={!open}>
             <Paper className={classes.card}>
@@ -117,7 +117,7 @@ export default function Card(props)
            
             <div>
                 {
-                   labels.map((lab)=>(<Label color={lab.color}/>))
+                   labels.map((lab)=>(<Label key={lab.id} color={lab.color}/>))
                 }
             </div>
             </div>

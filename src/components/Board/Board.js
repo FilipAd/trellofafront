@@ -4,7 +4,7 @@ import {makeStyles,fade} from "@material-ui/core/styles";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from "axios";
-import {boardsUrl,listsUrlEnd,boardsUrlEnd} from "../../URLs";
+import {boardsUrl,listsUrlEnd,boardsUrlEnd, boardHasMembersUrl, deleteEnd} from "../../URLs";
 import ClearIcon from '@material-ui/icons/Clear';
 import CheckIcon from '@material-ui/icons/Check';
 import { BrowserRouter as Router, Link } from "react-router-dom";
@@ -85,7 +85,7 @@ export default function Board(props)
         if(answer)
         {
         let updatedBoards=props.boards.filter(board=>board.id!==id);
-        axios.delete(boardsUrl+id,configToken).then(props.setBoard(updatedBoards)).catch(err=>{alert("Error")});
+        axios.delete(boardHasMembersUrl+deleteEnd+JSON.parse(localStorage.getItem("user")).id+"/"+id,configToken).then(props.setBoard(updatedBoards)).catch(err=>{alert("Error")});
         }
         
     }

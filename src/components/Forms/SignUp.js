@@ -30,17 +30,24 @@ export default function SignUp()
 
   function createUser()
   {
-    let user={fullname:fullName,username:userName,password:passw};
+    if(userName.match(/^[a-zA-Z0-9_]+$/) && fullName.match(/^[a-zA-Z0-9_]+$/))
+     {
+      let user={fullname:fullName,username:userName,password:passw};
     
-    axios.post(signUpUrl,user).then(()=>{setRedirect(true)}).catch(function (error)
-    {
-      if(error.response.status)
+      axios.post(signUpUrl,user).then(()=>{setRedirect(true)}).catch(function (error)
       {
-        alert("This username is already taken. Please choose another name.");
+        if(error.response.status)
+        {
+          alert("This username is already taken. Please choose another name.");
+        }
+        else
+        alert("The error occurred due to server problem.");
+      });
+
+     }
+      else {
+          alert("Only alphanumeric characters and underscore allowed.");
       }
-      else
-      alert("The error occurred due to server problem.");
-    });
 
   }
 

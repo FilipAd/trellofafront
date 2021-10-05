@@ -14,7 +14,7 @@ const useStyle = makeStyles((theme) =>({
         fontSize:"20px",
         multiline:"true",
         overflow:"hidden",
-        width : '40%',
+        width : '100%',
         background:"#dcf5ff",
         borderRadius:"30px",
         padding:theme.spacing(1,1,1,2),
@@ -25,6 +25,8 @@ const useStyle = makeStyles((theme) =>({
     {
         fontSize:"15px",
         color:"green",
+        display: "flex",
+        alignItems: "right",
     },
     buttonNo:
     {
