@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {InputBase,Button,IconButton,Badge} from "@material-ui/core";
+import {InputBase,Button,IconButton,Badge,Avatar,Paper} from "@material-ui/core";
 import {makeStyles,fade} from "@material-ui/core/styles";
 import Board from "./Board";
 import axios from "axios";
@@ -8,6 +8,8 @@ import Background from "../../background6.jpg";
 import Login from "../Forms/Login";
 import { Redirect,Link } from "react-router-dom";
 import MailOutline from "@material-ui/icons/MailOutline";
+import { InputBoard } from "../Input/InputBoard";
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 
 
 
@@ -56,16 +58,60 @@ const useStyle = makeStyles((theme) =>({
     },
     message:
     {
-        margin:theme.spacing(0,5,0,0),
+        margin:theme.spacing(1.5,5,0,0),
+      //  background:"#e9eef2 ",
+        width:"40px",
+        height:"40px",
+        "&:hover":{
+            background:fade("#467e83",0.5),
+            color:"black",
+        }
+    },
+    icon:
+    {
+        color:"#5c6b66",
+        width:"50px",
+        fontSize:"40px",  "&:hover":{
+            color:"white",
+        }
+    },
+    avatar:
+    {
+    margin:theme.spacing(0.5,2,0,0),
+    color:"white",
+    background:"#467e83"
+    },
+    line:
+    {
+    //  display:"flex",
+      background:"#d7dbda",
+      height:"50px",
+      width:"100%", 
+      flexDirection:"row",
+      marginLeft:"0px",
+      margin:theme.spacing(0,2,0,0),
+      textAlign:"right",
+      outlineColor: "blue",
+      boxShadow: "0 6px 6px grey",
+  
     },
     btnConfirm:{
-        background:"#286ad4 ",
+        background:"#467e83",
         color:"white",
+        margin:theme.spacing(0.5,3,0,1),
         "&:hover":{
             background:fade("#b9ebea",0.75),
             color:"black",
         }
     },
+    userButton:{
+        margin:theme.spacing(0,2,0,3),
+    },
+    username:{
+        fontSize:"20px",
+        fontFamily:"Lobster"
+
+    }
 }))
 
 
@@ -108,11 +154,11 @@ export default function RouteBoard(props)
         setRedirectToLogin(true);
     }
 
-    function handleCreateBoard()
+    function handleCreateBoard(titlePom)
     {
         setBoardTitle(boardTitle)
         let updatedBoards=[]
-        let newBoard={name:boardTitle,id:-1,idOrganization:1}
+        let newBoard={name:titlePom,id:-1,idOrganization:1}
         let newBoardId=0
         axios.post(boardsUrl,newBoard,configToken).then(res=>{updatedBoards=[...boards,res.data];setBoard(updatedBoards);
         let newBoardHasMembers={idBoard:res.data.id,idMember:JSON.parse(localStorage.getItem("user")).id}
@@ -142,43 +188,35 @@ export default function RouteBoard(props)
 
   
 
+
     return(
-        <div className={classes.root}>
-        <div align="center">
-         <div className={classes.createTitle}>
-            CREATE NEW BOARD:
-        </div>
-        <div align="right">
+        <div>
+        <div className={classes.line}>
+        <Button className={classes.userButton}><Avatar className={classes.avatar}/><div className={classes.username}>{JSON.parse(localStorage.getItem("user")).username}</div></Button>
         <Link to={invitationsEnd}>
-        <IconButton className={classes.message}>
+        <IconButton className={classes.message} >
             <Badge  badgeContent={numberOfInvitations} color="secondary" invisible={checkInvitations()}>
             
-            <MailOutline fontSize="large"/>
+            <MailOutline className={classes.icon} />
             
             </Badge>
         </IconButton>
         </Link>
         <Button className={classes.btnConfirm} onMouseDown={()=>handleLogout()}>LOGOUT</Button>
+        
+        </div>
+        <div className={classes.root}>
+        <div align="center">
+            
+         <div className={classes.createTitle}>
+            CREATE NEW BOARD:
+        </div>
+        <div align="right">
+       
         </div>
         
 
-
-        
-        <InputBase
-            className={classes.createInput}
-          placeholder="Your boards title..."
-          type="text"
-          onChange={handleOnChange}
-          onKeyDown={(e)=>{  if(e.key=="Enter")
-                                {   
-                                    e.preventDefault();
-                                    handleCreateBoard();
-                                    
-                                } 
-
-                        }}/>
-        
-
+        <InputBoard handleCreateBoard={handleCreateBoard}/>
 
        
         </div>
@@ -190,7 +228,7 @@ export default function RouteBoard(props)
         </div>
 
         </div>
-        
+        </div>
         );
         
     }

@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import {Button,TextField,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle} from "@material-ui/core";
 import {Paper} from "@material-ui/core"
 import InviteSearchResult from "./InviteSearchResult";
-import { CirclePicker } from 'react-color';
 import axios from "axios";
 import { cardhaslabelsUrl, deleteEnd, labelsUrl, membersByUsernameUrl } from "../URLs";
 import LabelThumbnail from "./LabelThumbnail";
+import InputLabel from "./Input/InputLabel";
 
 
 const useStyle = makeStyles((theme) =>({
@@ -21,37 +21,35 @@ const useStyle = makeStyles((theme) =>({
 
 export default function InviteDialog(props) {
 
+  let configToken=null;
+  let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
+
   const classes=useStyle();
   const [open, setOpen] = useState(false);
     let [result,setResult]=useState([]);
     const [pattern,setPattern]=useState(null);
-    let[labelColor,setLabelColor]=useState("#607d8b");
-    let[labelName,setLabelName]=useState("");
+
     let[pomChb,setPomChb]=useState([]);
     
 
   
 
-    function handleOnChange(e) 
-    {
-        setLabelName(e.target.value);
-    }
-
+   
   
   
-  const pickColor=(color)=>
-  {
-      setLabelColor(color.hex);
-  };
-
+  
   function cancle()
   {
     props.setOpenDialog(false);
   }
 
-  function handleAdd()
+  function handleAdd(labelText,colorLabel)
   {
-    let newLabel={color:labelColor,name:labelName,idMember:JSON.parse(localStorage.getItem("user")).id};
+    let newLabel={color:colorLabel,name:labelText,idMember:JSON.parse(localStorage.getItem("user")).id};
     props.addLabel(newLabel);
     
   }
@@ -70,11 +68,11 @@ export default function InviteDialog(props) {
 
   function attachLabel(lab)
   {
-    axios.post(cardhaslabelsUrl,{idCard:props.cardId,idLabel:lab.id}).then(res=>{props.setCardHasLabelsByCardId([...props.cardHasLabelsByCardId,res.data]);props.updateLabels(lab,1)}).catch(err=>alert(err));
+    axios.post(cardhaslabelsUrl,{idCard:props.cardId,idLabel:lab.id},configToken).then(res=>{props.setCardHasLabelsByCardId([...props.cardHasLabelsByCardId,res.data]);props.updateLabels(lab,1)}).catch(err=>alert(err));
   }
   function detachLabel(lab)
   {
-    axios.delete(cardhaslabelsUrl+deleteEnd+props.cardId+"/"+lab.id).then(res=>{console.log(res.data);props.setCardHasLabelsByCardId(props.cardHasLabelsByCardId.filter(l=>l.idLabel!==lab.id));props.updateLabels(lab,2)}).catch(err=>console.log(err))
+    axios.delete(cardhaslabelsUrl+deleteEnd+props.cardId+"/"+lab.id,configToken).then(res=>{console.log(res.data);props.setCardHasLabelsByCardId(props.cardHasLabelsByCardId.filter(l=>l.idLabel!==lab.id));props.updateLabels(lab,2)}).catch(err=>console.log(err))
   }
 
   return (
@@ -96,36 +94,10 @@ export default function InviteDialog(props) {
           <DialogContentText className={classes.label}>
           Create Label :
           </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="labelName"
-            autoComplete="off"
-            label="Name"
-            type="Name"
-            fullWidth
-            variant="standard"
-            onChange={handleOnChange}
-            onKeyDown={(e)=>{ 
-              if(e.key=="Enter")
-              {   
-                  e.preventDefault();
-                  handleAdd();
 
-              } 
-              else if(e.key=="Escape")
-              {
-                  e.preventDefault();
-                  cancle();
-                  
-              }
-          }}
-          />
-          <DialogActions>
-          <Button onClick={()=>cancle()}>Cancel</Button>
-          <Button onClick={()=>handleAdd()}>ADD</Button>
-        </DialogActions>
-         <CirclePicker onChangeComplete={pickColor}/>
+         <InputLabel handleAdd={handleAdd} cancle={cancle}/>
+
+        
       
         </DialogContent>
        

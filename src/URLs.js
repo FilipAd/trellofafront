@@ -30,11 +30,15 @@ export const cardHasLabelsByCardIdEnd="bycardid/";
 
 export const deleteEnd="delete/";
 
+export const commentEnd="/comments/";
+
 
 
 
 
 export const boardsUrl=baseUrl+boardsUrlEnd;
+
+export const commentUrl=baseUrl+commentEnd;
 
 export const cardHasLabelsByCardIdUrl=baseUrl+cardHasLabelsEnd+cardHasLabelsByCardIdEnd;
 

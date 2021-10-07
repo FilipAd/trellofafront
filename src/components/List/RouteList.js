@@ -7,9 +7,10 @@ import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {makeStyles,fade} from "@material-ui/core/styles";
 import Background from "../../background6.jpg"
-import {Button} from "@material-ui/core";
+import {Button,Avatar} from "@material-ui/core";
 import { Redirect,Link } from "react-router-dom";
 import InviteDialog from "../InviteDialog";
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 
 
 const ListContainer = styled.div
@@ -21,23 +22,60 @@ const useStyle = makeStyles((theme) =>({
 
   root:
   {
-  width:"100%",
-  height:"100vh",
+ /* width:"100%",
+  height:"100vw",
+ // background:"lightgrey",
+  backgroundSize:"cover",
   backgroundImage:`URL(${Background})`,
   backgroundPosition:"center",
   backgroundRepeat:"no-repeat",
-  backgroundSize:"cover",
+  //overflowX:"scroll",*/
+
+  width:"500%",
+  height:"200vw",
+ // background:"lightgrey",
+  backgroundSize:"500%",
+  backgroundImage:`URL(${Background})`,
+  backgroundPosition:"center",
+  backgroundRepeat:"no-repeat",
   },
   line:
   {
     background:"#0c5faa",
     height:"50px",
-    textAlign:"right",
     width:"100%", 
+    display:"flex",
+    flexDirection:"row",
+    marginLeft:"5px",
+    textAlign:"right",
+  
+
+
   },
   link:
   {
-    textDecoration:"none"
+    textDecoration:"none",
+   
+  },
+  avatar:
+  {
+    textAlign:"right",
+    height:"40px",
+    width:"40px",
+    align:"right",
+    margin:theme.spacing(0.5,2,2,1),
+   
+
+  },
+  username:{
+    fontSize:"30px",
+    color:"white",
+    margin:theme.spacing(0.5,2,2,1),
+    fontFamily:"Lobster"
+    
+  },
+  lists:{
+    overflowX:"scroll",
   },
   button:{
     textDecoration:"none",
@@ -49,7 +87,8 @@ const useStyle = makeStyles((theme) =>({
     "&:hover":{
       background:fade("#b9ebea",0.75),
       color:"white",
-    }
+    },
+ 
 },
 
 }))
@@ -57,13 +96,19 @@ const useStyle = makeStyles((theme) =>({
 // setList(res.data)});
 
 export default function RouteList(props) {
+  let configToken=null;
+  let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
   const classes=useStyle();
   const [lists, setList] = useState([]);
   const [redirectToLogin,setRedirectToLogin]=useState(false);
   const [redirectToBoards,setRedirectToBoards]=useState(false);
   const[openDialog,setOpenDialog]=useState(false);
   let [labelThumnail,setLabelThumbnail]=useState([]);
-  React.useEffect(() => { axios.get(membersUrl+JSON.parse(localStorage.getItem("user")).id+labelsEnd).then(res => {setLabelThumbnail(res.data);}); }, []);
+  React.useEffect(() => { axios.get(membersUrl+JSON.parse(localStorage.getItem("user")).id+labelsEnd,configToken).then(res => {setLabelThumbnail(res.data);}); }, []);
 
   function handleLogout()
     {
@@ -72,12 +117,7 @@ export default function RouteList(props) {
     }
 
 
-  let configToken=null;
-  let userFromStorage=JSON.parse(localStorage.getItem("user"));
-    if(userFromStorage!==null)
-    {
-    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
-    }
+  
   React.useEffect(() => { axios.get(boardsUrl+props.boardId+listsUrlEnd,configToken).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
 
   if (!lists) return null;
@@ -167,14 +207,16 @@ export default function RouteList(props) {
   return (
     <div className={classes.root}>
       <div className={classes.line}>
-        <Button className={classes.button} onMouseDown={()=>setOpenDialog(true)} >Invite</Button>
+      <Avatar className={classes.avatar}><PersonOutlineIcon/></Avatar>
+      <div className={classes.username}>{JSON.parse(localStorage.getItem("user")).username}</div>
+        <Button className={classes.button} onMouseDown={()=>setOpenDialog(true)} >Invite</Button>   
         <Link to={boardsUrlEnd} className={classes.link}>
         <Button className={classes.button}>Back to boards</Button>
         </Link>
         <Button className={classes.button} onMouseDown={()=>handleLogout()}>Logout</Button>
         <InviteDialog open={openDialog} setOpenDialog={setOpenDialog}/>
       </div>
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} className={classes.lists}>
       <ListContainer>
         {
           lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} setList={setList} lists={lists} labelThumnail={labelThumnail} setLabelThumbnail={setLabelThumbnail}/>))

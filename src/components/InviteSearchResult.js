@@ -35,16 +35,24 @@ const useStyle = makeStyles((theme) =>({
         
     },
         }))
-
     
-function sendInvitation(idReceiver)
-{
-    let invitation={idMember:idReceiver,idBoard:localStorage.getItem("boardId"),sender:JSON.parse(localStorage.getItem("user")).username};
-    axios.post(invitationUrl,invitation).then(res=>alert("successful")).catch(err=>alert("error"));
 
-}
 export default function InviteSearchResult(props)
 {
+
+    let configToken=null;
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+      if(userFromStorage!==null)
+      {
+      configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+      }
+
+    function sendInvitation(idReceiver)
+    {
+    let invitation={idMember:idReceiver,idBoard:localStorage.getItem("boardId"),sender:JSON.parse(localStorage.getItem("user")).username};
+    axios.post(invitationUrl,invitation,configToken).then(res=>alert("successful")).catch(err=>alert("error"));
+
+    }
     const classes=useStyle();
     const [buttonDisabled,setButtonDisabled]=useState(false);
     return(<div>

@@ -12,6 +12,7 @@ import Background from "../../background6.jpg"
 
 export default function SignUp()
  {
+
   const [fullName, setFullName] = useState("");
   const [userName,setUsername]=useState("");
   const [passw, setPassword] = useState("");
@@ -138,7 +139,7 @@ export default function SignUp()
       <Form onSubmit={handleSubmit}>
       <h1 className={classes.title}>Sign-up:</h1>
 
-        <FormGroup size="lg" controlid="fullname">
+        <FormGroup size="large" controlid="fullname">
           <FormLabel className={classes.label}>Full Name :</FormLabel>
           <Form.Control
             className={classes.createInput}
@@ -149,7 +150,7 @@ export default function SignUp()
           />
         </FormGroup>
 
-        <FormGroup size="lg" controlid="username">
+        <FormGroup size="large" controlid="username">
           <FormLabel className={classes.label}>Username : </FormLabel>
           <Form.Control
             className={classes.createInput}
@@ -160,7 +161,7 @@ export default function SignUp()
           />
         </FormGroup>
         
-        <FormGroup size="lg" controlid="password">
+        <FormGroup size="large" controlid="password">
           <FormLabel className={classes.label}>Password :</FormLabel>
           <Form.Control
             className={classes.createInput}
@@ -171,7 +172,7 @@ export default function SignUp()
         </FormGroup>
 
         <Link to={loginEnd} className={classes.link}>Already have an account? Sign in</Link>
-        <Button block size="lg" type="submit" disabled={!validateForm()} className={classes.button} onMouseDown={()=>createUser()}>
+        <Button block size="large" type="submit" disabled={!validateForm()} className={classes.button} onMouseDown={()=>createUser()}>
           CREATE
         </Button>
       </Form>

@@ -4,8 +4,9 @@ import {makeStyles,fade} from "@material-ui/core/styles";
 import Background from "../background6.jpg";
 import { Redirect } from "react-router";
 import Invitation from "./Invitation";
-import { boardHasMembersUrl, invitationUrl, loginEnd } from "../URLs";
+import { boardHasMembersUrl, boardsUrlEnd, invitationUrl, loginEnd } from "../URLs";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 
 
@@ -29,24 +30,36 @@ title:
     textShadow: "2px 0 0 #d2d9db, -2px 0 0 #d2d9db, 0 2px 0 #d2d9db, 0 -2px 0 #d2d9db, 1px 1px #d2d9db, -1px -1px 0 #d2d9db, 1px -1px 0 #d2d9db, -1px 1px 0 #d2d9db",
 },
 btnConfirm:{
-    background:"#286ad4 ",
+    background:"#467e83 ",
+    
     color:"white",
     "&:hover":{
         background:fade("#b9ebea",0.75),
         color:"black",
     }
 },
+link:{
+    textDecoration:"none",
+    margin:theme.spacing(1,3,1,1),
+}
 }))
 
 export default function Invitations(props)
 {
 
+    let configToken=null;
+    let userFromStorage=JSON.parse(localStorage.getItem("user"));
+      if(userFromStorage!==null)
+      {
+      configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+      }
+
     const[invite,setInvite]=useState([]);
     const[redirectToLogin,setRedirectToLogin]=useState(false);
-    React.useEffect(()=>{axios.get(invitationUrl+JSON.parse(localStorage.getItem("user")).id).then(res=>{setInvite(res.data);console.log("EVO IDE:"+res.data)});},[]);
+    React.useEffect(()=>{axios.get(invitationUrl+JSON.parse(localStorage.getItem("user")).id,configToken).then(res=>{setInvite(res.data);console.log("EVO IDE:"+res.data)});},[]);
 
     function deleteInvitation(invitation) {
-        axios.delete(invitationUrl+invitation.id).then(setInvite(invite.filter(inv=>inv.id !== invitation.id)));
+        axios.delete(invitationUrl+invitation.id,configToken).then(setInvite(invite.filter(inv=>inv.id !== invitation.id)));
     }
     function checkIfMember(result, invitation) {
         console.log(result);
@@ -56,12 +69,12 @@ export default function Invitations(props)
         }
         else {
         let table_member = {idBoard: invitation.idBoard, idMember: invitation.idMember}
-        axios.post(boardHasMembersUrl, table_member).then(res=>{console.log(res.data)})
+        axios.post(boardHasMembersUrl, table_member,configToken).then(res=>{console.log(res.data)})
         }
 
     }
     function accept(invitation) {
-        axios.get(boardHasMembersUrl+invitation.idMember+"/"+invitation.idBoard).then(res=>checkIfMember(res, invitation));
+        axios.get(boardHasMembersUrl+invitation.idMember+"/"+invitation.idBoard,configToken).then(res=>checkIfMember(res, invitation));
         
         deleteInvitation(invitation);
     }
@@ -82,6 +95,7 @@ export default function Invitations(props)
     return(
     <div className={classes.root}>
         <div align="right">
+        <Link to={boardsUrlEnd} className={classes.link}> <Button className={classes.btnConfirm}>BACK TO BOARDS</Button></Link>
         <Button className={classes.btnConfirm} onMouseDown={()=>handleLogout()}>LOGOUT</Button>
         </div>
         <div align="center">

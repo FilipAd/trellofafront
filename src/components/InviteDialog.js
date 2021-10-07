@@ -7,6 +7,7 @@ import {Paper} from "@material-ui/core"
 import InviteSearchResult from "./InviteSearchResult";
 import axios from "axios";
 import { membersByUsernameUrl } from "../URLs";
+import { configure } from "@testing-library/dom";
 
 const useStyle = makeStyles((theme) => ({
   result: {
@@ -19,6 +20,12 @@ const useStyle = makeStyles((theme) => ({
 
 
 export default function InviteDialog(props) {
+  let configToken=null;
+  let userFromStorage=JSON.parse(localStorage.getItem("user"));
+    if(userFromStorage!==null)
+    {
+    configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    }
   const classes = useStyle();
   const [open, setOpen] = useState(false);
     let [result,setResult]=useState([]);
@@ -41,7 +48,7 @@ export default function InviteDialog(props) {
   function find(patern)
   {
       if(pattern.match(/^[a-zA-Z0-9_]+$/)) {
-      axios.get(membersByUsernameUrl+patern).then(res=>{console.log(res.data);setResult(res.data)}).catch(err=>{console.log(err);alert("Error")});
+      axios.get(membersByUsernameUrl+patern,configToken).then(res=>{console.log(res.data);setResult(res.data)}).catch(err=>{console.log(err);alert("Error")});
       console.log(result);}
       else {
           alert("Only alphanumeric characters and underscore allowed.");

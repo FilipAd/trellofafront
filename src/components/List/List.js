@@ -127,7 +127,7 @@ export default function List(props) {
 
     return (
         <div>
-            <Droppable droppableId={String(props.list.id)}>
+            <Droppable droppableId={String(props.list.id)} >
                 {(provided, snapshot) => (
                     <Paper className={classes.root}>
                         <CssBaseline />
@@ -137,6 +137,7 @@ export default function List(props) {
                             {props.list.cards.sort(function(a, b){return a.dndIndex - b.dndIndex}).map((card, index) => (
                                 <Draggable
                                     key={card.id}
+                                    
                                     draggableId={String(card.id)}
                                     index={card.dndIndex}>
                                     {(provided, snapshot) => (
