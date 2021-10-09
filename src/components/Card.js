@@ -12,8 +12,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Tooltip } from "react-bootstrap";
 import AddLabelDialog from "./AddLabelDialog";
 import CardComments from "./CardComments";
-import { findAllInRenderedTree } from "react-dom/test-utils";
-
+import YesNoCardDeleteDialog from "./YesNoCardDeleteDialog";
 
 
 
@@ -21,7 +20,7 @@ const useStyle = makeStyles((theme) =>({
     card:{
         padding:theme.spacing(1,1,1,2),
         margin:theme.spacing(1),
-        overflow:"hidden",
+        overflowX:"scroll",
     }, 
     icons:
     {
@@ -49,6 +48,7 @@ export default function Card(props)
     const [open,setOpen]=useState(false);
     const [openLabelDialog,setOpenLabelDialog]=useState(false);
     const [openCommentDialog,setOpenCommentDialog]=useState(false);
+    const [openYesNoDialog,setOpenYesNoDialog]=useState(false);
     const [labels,setLabels]=useState([]);
     let [comments,setComments]=useState([]);
     
@@ -60,15 +60,16 @@ export default function Card(props)
     React.useEffect(() => { axios.get(cardsUrl+props.card.id+commentEnd,configToken).then(res => {setComments(res.data) }); }, []);
     
     
+
+ 
     function handleDelete(id)
     {
-    var answer=window.confirm("Delete Card ?");
-        if(answer)
-        {
+       
         axios.delete(cardsUrl+id,configToken)
         .then(response => console.log(response));
         props.deleteCard(id);
-        }
+       
+       
 
     }
 
@@ -116,6 +117,7 @@ export default function Card(props)
             updateLabels={updateLabels}/>
             <CardComments open={openCommentDialog} setOpenCommentDialog={setOpenCommentDialog} comments={comments} setComments={setComments} cardId={props.card.id} deleteComment={deleteComment}
             editComment={editComment}/>
+           <YesNoCardDeleteDialog open={openYesNoDialog} setOpenYesNoDialog={setOpenYesNoDialog} handleDelete={handleDelete} cardId={props.card.id} />
             <Collapse in={!open}>
             <Paper className={classes.card}>
             {props.card.description}
@@ -129,7 +131,7 @@ export default function Card(props)
             </IconButton>
             
             
-            <IconButton onMouseDown={()=>handleDelete(props.card.id)} className={classes.icons}>
+            <IconButton onMouseDown={()=>setOpenYesNoDialog(true)} className={classes.icons}>
             <Tooltip title="Delete Card">
                 <DeleteIcon  fontSize="small"/>
             </Tooltip>

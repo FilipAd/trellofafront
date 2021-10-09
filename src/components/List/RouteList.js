@@ -2,7 +2,7 @@ import List from "./List";
 import styled from "styled-components";
 import React, { useState,} from "react";
 import axios from 'axios';
-import { cardsUrl,boardsUrl,listsUrlEnd, boardsUrlEnd, loginEnd, labelsUrl, membersUrl, labelsEnd } from "../../URLs";
+import { cardsUrl,boardsUrl,listsUrlEnd, boardsUrlEnd, loginEnd, labelsUrl, membersUrl, labelsEnd, boardHasMembersUrl } from "../../URLs";
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {makeStyles,fade} from "@material-ui/core/styles";
@@ -28,8 +28,8 @@ const useStyle = makeStyles((theme) =>({
   backgroundSize:"cover",
   backgroundImage:`URL(${Background})`,
   backgroundPosition:"center",
-  backgroundRepeat:"no-repeat",
-  //overflowX:"scroll",*/
+  backgroundRepeat:"no-repeat",*/
+  //overflowX:"scroll",
 
   width:"500%",
   height:"200vw",
@@ -75,7 +75,7 @@ const useStyle = makeStyles((theme) =>({
     
   },
   lists:{
-    overflowX:"scroll",
+    minHeight:"5px",
   },
   button:{
     textDecoration:"none",
@@ -96,11 +96,14 @@ const useStyle = makeStyles((theme) =>({
 // setList(res.data)});
 
 export default function RouteList(props) {
+  
   let configToken=null;
+  let idLogMember=0;
   let userFromStorage=JSON.parse(localStorage.getItem("user"));
     if(userFromStorage!==null)
     {
     configToken={ headers: {Authorization:"Bearer "+userFromStorage.token}};
+    idLogMember=JSON.parse(localStorage.getItem("user")).id;
     }
   const classes=useStyle();
   const [lists, setList] = useState([]);
@@ -108,6 +111,60 @@ export default function RouteList(props) {
   const [redirectToBoards,setRedirectToBoards]=useState(false);
   const[openDialog,setOpenDialog]=useState(false);
   let [labelThumnail,setLabelThumbnail]=useState([]);
+  let[membership,setMembership]=useState(false);
+
+
+
+  function checkIfMember(result) {
+    console.log(result);
+    if (result !== null && result.data.length > 0)
+    {   
+      setMembership(false);
+    }
+    else
+    {
+      
+      setMembership(true);
+    }
+     
+}
+
+/*
+
+function deleteCard(id,listPom) 
+{
+    let updatedLsts=[];
+    let updatedCards=listPom.cards.filter(card=>card.id!==id);
+    updatedCards.map(card => {
+        if (card.dndIndex > listPom.cards.filter(card=>card.id==id)[0].dndIndex) {
+          card.dndIndex--;
+          axios.put(cardsUrl + card.id, card,configToken).then((result) => { console.log('result' + result) });
+        }
+      })
+
+   for(let i=0;i<lists.length;i++)
+   {
+       
+       if(lists[i].id==listPom.id)
+       {
+           let newLst=listPom;
+           newLst.cards=updatedCards;
+           updatedLsts.push(newLst);
+       }
+       else
+       updatedLsts.push(lists[i]);
+
+   }
+ //  const remainingCards = listcards.filter(card => id !== card.id);
+ //  console.log(remainingCards);
+ //  setCards(remainingCards);
+  setList(updatedLsts);
+}
+*/
+
+
+React.useEffect(() => { axios.get(boardHasMembersUrl+idLogMember+"/"+props.boardId,configToken).then(res=>setMembership(checkIfMember(res))).catch(err=>alert(err)); }, []);
+
   React.useEffect(() => { axios.get(membersUrl+JSON.parse(localStorage.getItem("user")).id+labelsEnd,configToken).then(res => {setLabelThumbnail(res.data);}); }, []);
 
   function handleLogout()
@@ -115,7 +172,7 @@ export default function RouteList(props) {
         localStorage.removeItem("user");
         setRedirectToLogin(true);
     }
-
+    
 
   
   React.useEffect(() => { axios.get(boardsUrl+props.boardId+listsUrlEnd,configToken).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
@@ -194,6 +251,7 @@ export default function RouteList(props) {
     setList(newLists);
   };
 
+
   if(redirectToBoards)
   {
     return <Redirect to={boardsUrlEnd} />
@@ -203,7 +261,10 @@ export default function RouteList(props) {
   {
     return <Redirect to={loginEnd}/>
   }
- 
+  if(membership)
+  {
+    return <Redirect to="/404"/>
+  }
   return (
     <div className={classes.root}>
       <div className={classes.line}>
@@ -219,7 +280,7 @@ export default function RouteList(props) {
     <DragDropContext onDragEnd={onDragEnd} className={classes.lists}>
       <ListContainer>
         {
-          lists.map((list) => (<List list={list} key={list.id} onDragEnd={onDragEnd} setList={setList} lists={lists} labelThumnail={labelThumnail} setLabelThumbnail={setLabelThumbnail}/>))
+          lists.map((list) => (<List  list={list} key={list.id} onDragEnd={onDragEnd} setList={setList} lists={lists} labelThumnail={labelThumnail} setLabelThumbnail={setLabelThumbnail}/>))
         }
         <InputContainer type={"list"} setList={setList} lists={lists} />
       </ListContainer>

@@ -54,7 +54,7 @@ return(<div>
           />
           <DialogActions>
           <Button onClick={()=>props.cancle()}>Cancel</Button>
-          <Button onClick={()=>addLabelPom()}>ADD</Button>
+          <Button onClick={()=>addLabelPom()}>CREATE</Button>
         </DialogActions>
         <CirclePicker onChangeComplete={pickColor}/>
 </div>);

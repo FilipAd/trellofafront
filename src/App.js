@@ -6,6 +6,7 @@ import SignUp from "./components/Forms/SignUp";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import {boardsUrlEnd,listsUrlEnd,invitationsEnd} from "./URLs";
 import RouteInvitation from "./components/RouteInvitation";
+import NotFoundPage from "./components/NotFoundPage";
 
 
 
@@ -28,6 +29,8 @@ export default function App()
       <Route exect path={`${boardsUrlEnd}:id${listsUrlEnd}`} render={({match}) => <RouteList boardId={match.params.id} setBoardId={setBoardId}/> } />
       <Route exact path="/boards" render={(props) => <RouteBoard setBoardId={setBoardId}/> }  />  
       <Route exact path="/invitations" render={(props) => <RouteInvitation/> } />
+      <Route exact path='/404' component={NotFoundPage} />
+      <Route component={NotFoundPage}/>
     </Switch>
     </Router>
   

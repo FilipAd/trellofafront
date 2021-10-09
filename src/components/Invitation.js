@@ -40,7 +40,7 @@ export default function Invitation(props)
     const classes=useStyle();
     return(<div>
     <Paper className={classes.board}>
-        <div>FROM:{props.inv.sender} </div>    
+        <div><div>FROM: {props.inv.sender} </div><div>TABLE: {props.inv.boardName}</div></div>    
     <div>
         <IconButton onClick={()=>props.accept(props.inv)}>
                 <CheckIcon className={classes.buttonYes}/>

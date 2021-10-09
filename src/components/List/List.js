@@ -17,6 +17,9 @@ const useStyle = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         marginTop: theme.spacing(1),
     },
+    list:{
+        minHeight:"50px",
+    }
 }))
 export default function List(props) {
 
@@ -48,6 +51,10 @@ export default function List(props) {
         }
         props.setList(updatedLists);
     }
+ /*   function deleteCard(id)
+    {
+        props.deleteCard(id,props.list)
+    }*/
 
     function deleteCard(id) 
     {
@@ -73,7 +80,7 @@ export default function List(props) {
            updatedLsts.push(props.lists[i]);
 
        }
-       const remainingCards = cards.filter(card => id !== card.id);
+     //  const remainingCards = cards.filter(card => id !== card.id);
      //  console.log(remainingCards);
      //  setCards(remainingCards);
       props.setList(updatedLsts);
