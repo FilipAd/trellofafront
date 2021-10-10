@@ -16,8 +16,12 @@ export default function InputLabel(props)
 
  function addLabelPom()
  {
+     if(pomText!=="")
+     {
      props.handleAdd(pomText,labelColorPom);
      setPomText("");
+     }
+     else   alert("Enter the label name");
  }
 
  const pickColor=(color)=>
