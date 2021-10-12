@@ -29,7 +29,15 @@ function handleOnChange(e)
 }
 function handleCreateBoardPom()
 {
+    if(boardTitlePom!=="")
+    {
     props.handleCreateBoard(boardTitlePom);
+    setBoardTitlePom("");
+    }
+
+    else
+    alert("Enter board title")
+    
 }
 
     return(<InputBase
@@ -37,6 +45,7 @@ function handleCreateBoardPom()
       placeholder="Your boards title..."
       type="text"
       onChange={handleOnChange}
+      value={boardTitlePom}
       onKeyDown={(e)=>{  if(e.key=="Enter")
                             {   
                                 e.preventDefault();

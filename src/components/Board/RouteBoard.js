@@ -58,7 +58,7 @@ const useStyle = makeStyles((theme) =>({
     },
     message:
     {
-        margin:theme.spacing(1.5,5,0,0),
+        margin:theme.spacing(0.5,5,0,0),
       //  background:"#e9eef2 ",
         width:"40px",
         height:"40px",
@@ -84,15 +84,15 @@ const useStyle = makeStyles((theme) =>({
     line:
     {
     //  display:"flex",
-      background:"#d7dbda",
-      height:"50px",
+      background:"#d3e6c1",
+      height:"60px",
       width:"100%", 
       flexDirection:"row",
       marginLeft:"0px",
-      margin:theme.spacing(0,2,0,0),
+      margin:theme.spacing(0,1,1,1),
       textAlign:"right",
       outlineColor: "blue",
-      boxShadow: "0 6px 6px grey",
+      boxShadow: "0 5px 5px grey",
   
     },
     btnConfirm:{
@@ -106,10 +106,11 @@ const useStyle = makeStyles((theme) =>({
     },
     userButton:{
         margin:theme.spacing(0,2,0,3),
+        fontFamily:"Roboto"
     },
     username:{
         fontSize:"20px",
-        fontFamily:"Lobster"
+       fontFamily:"Arial"
 
     }
 }))

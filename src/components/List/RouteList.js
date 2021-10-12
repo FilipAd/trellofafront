@@ -7,10 +7,11 @@ import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {makeStyles,fade} from "@material-ui/core/styles";
 import Background from "../../background6.jpg"
-import {Button,Avatar} from "@material-ui/core";
+import {Button,Avatar,Paper} from "@material-ui/core";
 import { Redirect,Link } from "react-router-dom";
 import InviteDialog from "../InviteDialog";
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 
 const ListContainer = styled.div
@@ -31,31 +32,47 @@ const useStyle = makeStyles((theme) =>({
   backgroundRepeat:"no-repeat",*/
   //overflowX:"scroll",
 
-  width:"500%",
-  height:"200vw",
+  width:"500%", //500%
+  height:"100vw",
  // background:"lightgrey",
-  backgroundSize:"500%",
+  backgroundSize:"500%", //500%
   backgroundImage:`URL(${Background})`,
   backgroundPosition:"center",
   backgroundRepeat:"no-repeat",
   },
   line:
   {
-    background:"#0c5faa",
+    background:"#143e80",
     height:"50px",
     width:"100%", 
     display:"flex",
     flexDirection:"row",
     marginLeft:"5px",
-    textAlign:"right",
+    textAlign:"left",
   
 
+
+  },
+  logo:{
+    fontSize:"30px",
+    color:"#84b0f5",
+    fontWeight:"bold",
+    textShadow: "2px 0 0 white",
+    fontFamily:"Lucida Handwriting",
+   margin:theme.spacing(0.5,1,1,10),
 
   },
   link:
   {
     textDecoration:"none",
    
+  },
+  board:
+  {
+    fontSize:"30px",
+    color:"white",
+    fontFamily:"Arial",
+    margin:theme.spacing(0.5,0,0,0),
   },
   avatar:
   {
@@ -71,7 +88,8 @@ const useStyle = makeStyles((theme) =>({
     fontSize:"30px",
     color:"white",
     margin:theme.spacing(0.5,2,2,1),
-    fontFamily:"Lobster"
+    fontFamily:"Arial",
+    textAlign:"right"
     
   },
   lists:{
@@ -90,6 +108,19 @@ const useStyle = makeStyles((theme) =>({
     },
  
 },
+buttonInvite:{
+  textDecoration:"none",
+  align:"left",
+  margin:theme.spacing(1,1,1,20),
+background:"#f2f98d",
+
+color:"black",
+  "&:hover":{
+    background:fade("#b9ebea",0.75),
+    color:"white",
+  },
+
+},
 
 }))
 
@@ -106,6 +137,7 @@ export default function RouteList(props) {
     idLogMember=JSON.parse(localStorage.getItem("user")).id;
     }
   const classes=useStyle();
+  const [board,setBoard]=useState(null);
   const [lists, setList] = useState([]);
   const [redirectToLogin,setRedirectToLogin]=useState(false);
   const [redirectToBoards,setRedirectToBoards]=useState(false);
@@ -176,6 +208,7 @@ React.useEffect(() => { axios.get(boardHasMembersUrl+idLogMember+"/"+props.board
 
   
   React.useEffect(() => { axios.get(boardsUrl+props.boardId+listsUrlEnd,configToken).then(res => {setList(res.data); console.log(res.data);props.setBoardId(props.boardId) }); }, []);
+  React.useEffect(() => { axios.get(boardsUrl+props.boardId,configToken).then(res => setBoard(res.data.name)); },[]);
 
   if (!lists) return null;
 
@@ -268,15 +301,23 @@ React.useEffect(() => { axios.get(boardHasMembersUrl+idLogMember+"/"+props.board
   return (
     <div className={classes.root}>
       <div className={classes.line}>
-      <Avatar className={classes.avatar}><PersonOutlineIcon/></Avatar>
-      <div className={classes.username}>{JSON.parse(localStorage.getItem("user")).username}</div>
-        <Button className={classes.button} onMouseDown={()=>setOpenDialog(true)} >Invite</Button>   
-        <Link to={boardsUrlEnd} className={classes.link}>
+      <Link to={boardsUrlEnd} className={classes.link}>
         <Button className={classes.button}>Back to boards</Button>
         </Link>
+      
+    
+      
+      
+        <div className={classes.board}><DashboardIcon/>Board: {board}</div>
+        <div className={classes.logo}>TrelloFA</div>
+        <Button className={classes.buttonInvite} onMouseDown={()=>setOpenDialog(true)} >Invite</Button>   
         <Button className={classes.button} onMouseDown={()=>handleLogout()}>Logout</Button>
+        <Avatar className={classes.avatar}><PersonOutlineIcon/></Avatar>
+      <div className={classes.username}>{JSON.parse(localStorage.getItem("user")).username}</div>
+      
         <InviteDialog open={openDialog} setOpenDialog={setOpenDialog}/>
       </div>
+      
     <DragDropContext onDragEnd={onDragEnd} className={classes.lists}>
       <ListContainer>
         {

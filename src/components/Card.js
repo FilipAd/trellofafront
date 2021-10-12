@@ -75,7 +75,7 @@ export default function Card(props)
 
     function addLabel(reqLabel)
     {
-        axios.post(labelsUrl,reqLabel,configToken).then(res=>{alert("successful");props.setLabelThumbnail([...props.labelThumnail,res.data])}).catch(err=>alert("error"));
+        axios.post(labelsUrl,reqLabel,configToken).then(res=>{;props.setLabelThumbnail([...props.labelThumnail,res.data])}).catch(err=>alert("error"));
 
     }
 

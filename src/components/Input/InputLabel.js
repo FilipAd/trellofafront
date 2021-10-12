@@ -41,6 +41,7 @@ return(<div>
             fullWidth
             variant="standard"
             onChange={handleOnChange}
+            value={pomText}
             onKeyDown={(e)=>{ 
               if(e.key=="Enter")
               {   
