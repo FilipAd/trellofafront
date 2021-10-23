@@ -45,8 +45,8 @@ onKeyDown={(e)=>{
 }}
 />
  <DialogActions>
- <Button onClick={()=>props.cancle()}>Cancel</Button>
- <Button onClick={()=>addComment()}>Post</Button>
+ <Button onClick={()=>props.cancle()}>CLOSE</Button>
+ <Button onClick={()=>addComment()}>POST</Button>
 </DialogActions>
 </div>);
 }
